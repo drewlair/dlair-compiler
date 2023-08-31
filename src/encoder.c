@@ -16,27 +16,9 @@ int string_decode( const char *es, char *s ){
         }
 
         else if (*curr == '\''){
+            printf("Error: char, not string\n");
+            return 1;
 
-
-            curr++;
-            if (*curr == '\'' && *(curr+1) == '\0'){
-                decoded_str[ decoded_i ] = '\0';
-                strncpy(s, decoded_str, 1);
-                return 0;
-            }
-            decoded_str[ decoded_i++ ] = '\'';
-            if ( *(curr+1) != '\'' || *(curr) == '\\' || *(curr+2) != '\0' ){
-                printf("Error: Bad character string\n");
-                return 1;
-            }
-
-            decoded_str[ decoded_i++ ] = *curr;
-            decoded_str[ decoded_i++ ] = '\'';
-            decoded_str[ decoded_i ] = '\0';
-
-            int len = strlen(decoded_str)+1;
-            strncpy(s, decoded_str, len);
-            return 0;
         }
 
         else if( *curr != '\"' ){
@@ -66,7 +48,6 @@ int string_decode( const char *es, char *s ){
                         }
                         else if ( *curr != '\0'){
                             printf("Bad String: Text after end quote!\n");
-                            printf("%c\n", *curr);
                             return 1;
                         }
 
@@ -78,7 +59,6 @@ int string_decode( const char *es, char *s ){
                     }
                     else{
                         printf("Bad String: Text after end quote!\n");
-                        printf("%d %d %c $\n",decoded_i,size,*(curr+1));
                         return 1;
                     }
 
@@ -128,7 +108,6 @@ int string_decode( const char *es, char *s ){
                             *(curr+3) == 'v' ))
                         ){
                             printf("Error: Hex value too large!\n");
-                            printf("%c$\n", *(curr+2));
                             return 1;
                         }
                         char hexVal[3] = {'\0', '\0', '\0'};
@@ -136,10 +115,14 @@ int string_decode( const char *es, char *s ){
                         hexVal[1] = *(curr);
                         int hexInt = (int)strtol(hexVal, NULL, 16);
                         if (hexInt < 33 || hexInt > 127){
-                            printf("Error: Hex value not in ASCII range\n");
-                            return 1;
+                            decoded_str[ decoded_i++ ] = '0';
+                            decoded_str[ decoded_i++ ] = 'x';
+                            decoded_str[ decoded_i++ ] = *(curr-1);
+                            decoded_str[ decoded_i++ ] = *(curr);
                         }
-                        decoded_str[ decoded_i++ ] = (char)hexInt;
+                        else{
+                            decoded_str[ decoded_i++ ] = (char)hexInt;
+                        }
 
                     }
 
@@ -183,7 +166,6 @@ int string_encode( const char *s, char *es ){
     int encoded_i = 0;
     memset(encoded_str, '\0', MAX_STRING_LEN);
     char* curr = (char*)s;
-    printf("hello world");
     if ( strlen(s) == 0){
 
         encoded_str[ encoded_i++ ] = '\"';
@@ -206,8 +188,6 @@ int string_encode( const char *s, char *es ){
         int len = sizeof(encoded_str);
         strncpy(es, encoded_str, len);
         return 0;
-
-
 
     }
 

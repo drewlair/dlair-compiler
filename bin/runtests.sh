@@ -2,7 +2,7 @@
 
 for testfile in test/encode/good*.bminor
 do
-	if ./bminor --encode $testfile > $testfile.out
+	if ./exec/bminor --encode $testfile > $testfile.out
 	then
 		echo "$testfile success (as expected)"
 	else
@@ -12,7 +12,7 @@ done
 
 for testfile in test/encode/bad*.bminor
 do
-	if ./bminor --encode $testfile > $testfile.out
+	if ./exec/bminor --encode $testfile > $testfile.out
 	then
 		echo "$testfile success (INCORRECT)"
 	else
