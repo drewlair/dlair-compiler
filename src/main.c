@@ -37,7 +37,7 @@ int main(int argc, char* argv[]){
             printf("%s$ %s$\n",es,check_S);
             return 1;
         }
-        printf("%s\n", check_S);
+        
         if ( string_encode(check_S, check_ES) == 1 ){
             printf("Encoder Test failed\n");
             printf("%s$ %s$\n",check_S,check_ES);

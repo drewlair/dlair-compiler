@@ -68,16 +68,18 @@ int string_decode( const char *es, char *s ){
                     curr++;
 
                     if (*curr == 'a'){
-                        decoded_str[ decoded_i++ ] = '\a';
+                        decoded_str[ decoded_i++ ] = '7';
                     }
                     else if (*curr == 'b'){
                         decoded_str[ decoded_i++ ] = '\b';
                     }
                     else if (*curr == 'e'){
-                        decoded_str[ decoded_i++ ] = '\e';
+                        decoded_str[ decoded_i++ ] = '2';
+                        decoded_str[ decoded_i++ ] = '7';
                     }
                     else if (*curr == 'f'){
-                        decoded_str[ decoded_i++ ] = '\f';
+                        decoded_str[ decoded_i++ ] = '1';
+                        decoded_str[ decoded_i++ ] = '2';
                     }
                     else if ( *curr == 'n' ){
                         decoded_str[ decoded_i++ ] = '\n';
@@ -115,10 +117,15 @@ int string_decode( const char *es, char *s ){
                         hexVal[1] = *(curr);
                         int hexInt = (int)strtol(hexVal, NULL, 16);
                         if (hexInt < 33 || hexInt > 127){
-                            decoded_str[ decoded_i++ ] = '0';
-                            decoded_str[ decoded_i++ ] = 'x';
-                            decoded_str[ decoded_i++ ] = *(curr-1);
-                            decoded_str[ decoded_i++ ] = *(curr);
+                            char hexNum[4];
+                            sprintf(hexNum, "%d", hexInt);
+                            int len = strlen(hexNum);
+                            printf("%s\n", hexNum);
+
+                            for (int i = 0; i < len; i++){
+                                decoded_str[ decoded_i++ ] = hexNum[i];
+                            }
+
                         }
                         else{
                             decoded_str[ decoded_i++ ] = (char)hexInt;
@@ -175,22 +182,24 @@ int string_encode( const char *s, char *es ){
 
         return 0;
     }
+    /*
     else if ( strlen(s) == 1 ){
-        encoded_str[ encoded_i++ ] = '\'';
+        encoded_str[ encoded_i++ ] = '\"';
         if ( !( (int)(*curr) > 31 && (int)(*curr) < 127 ) ){
             printf("Error: Bad character input\n");
             return 1;
         }
+
         encoded_str[ encoded_i++ ] = *curr;
 
-        encoded_str[ encoded_i++ ] = '\'';
+        encoded_str[ encoded_i++ ] = '\"';
 
         int len = sizeof(encoded_str);
         strncpy(es, encoded_str, len);
         return 0;
 
     }
-
+    */
 
     encoded_str[ encoded_i++ ] = '\"';
 
@@ -229,6 +238,10 @@ int string_encode( const char *s, char *es ){
             encoded_str[ encoded_i++ ] = '\\';
             encoded_str[ encoded_i++ ] = '\'';
         }
+        else if (c == '\b'){
+            encoded_str[ encoded_i++ ] = '\b';
+        }
+
 
         else if ( (int)(*curr) > 31 && (int)(*curr) < 127 ){
             encoded_str[ encoded_i++ ] = *curr;
