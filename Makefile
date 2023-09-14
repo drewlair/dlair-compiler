@@ -22,8 +22,9 @@ $(MAIN).o: src/$(MAIN).c include/$(FUNC).h include/$(MAIN).h
 $(EXEC): $(MAIN).o $(FUNC).o scanner.o
 	$(CMP) $(FLAGS) $(MAIN).o $(FUNC).o scanner.o -o exec/$(EXEC)
 
-test: bin/runtests.sh
+test: bin/runtests.sh bin/runscans.sh
 	./bin/runtests.sh
+	./bin/runscans.sh
 
 scan: bin/runscans.sh
 	./bin/runscans.sh
