@@ -1,0 +1,6 @@
+x: integer;
+y: integer = 123;
+f: float = 45.67;
+b: boolean = false;
+c: char    = 'q';
+s: string  = "hello bminor\n";

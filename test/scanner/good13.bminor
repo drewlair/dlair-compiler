@@ -1,0 +1,7 @@
+//Function Example
+printarray: function void ( a: array [] integer ) = {
+	i: integer;
+	for( i=0;i<array_length(a);i++) {
+		print a[i], "\n";
+	}
+}

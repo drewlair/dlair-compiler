@@ -42,7 +42,7 @@ int string_decode( const char *es, char *s ){
                             curr++;
                         }
 
-                        if (decoded_i >= MAX_STRING_LEN){
+                        if (decoded_i > MAX_STRING_LEN){
                             printf("Error: String is too long!\n");
                             return 1;
                         }
@@ -101,7 +101,7 @@ int string_decode( const char *es, char *s ){
                     else if (*curr == '0' && *(curr+1) == 'x'){
 
                         curr += 2;
-
+                        /*
                         if
                             ( !isspace( *(curr+2) ) &&
                             !( *(curr+2) == '\\' &&
@@ -109,13 +109,49 @@ int string_decode( const char *es, char *s ){
                             *(curr+3) == 't' ||
                             *(curr+3) == 'v' ))
                         ){
-                            printf("Error: Hex value too large!\n");
+                            
+                        }
+                        */
+                        char* counter = curr;
+                        int count = 0;
+                        while ( *counter != '\0' &&
+                                !isspace(*counter) &&
+                                *counter != '\\'){
+                            count++;
+                            counter++;
+                        }
+                        if (count > 8){
+                            printf("Hex value is too large!\n");
                             return 1;
                         }
+                        char hexVal[count];
+                        memset(hexVal, '\0', count);
+                        int hexIndex = 0;
+                        while ( *curr != '\0' &&
+                                *curr != '\\' &&
+                                !isspace(*curr)
+                              ){
+
+                            if ( ((int)(*curr) > 57 && (int)(*curr) < 65) ||
+                                 ((int)(*curr) < 47 ) ||
+                                 ((int)(*curr) > 70 && (int)(*curr) < 97) ||
+                                 ((int)(*curr) > 102)
+                               ){
+                                printf("Invalid hexadecimal input\n");
+                                return 1;
+                            }
+
+                            hexVal[hexIndex++] = *(curr++);
+                        }
+                        int hexInt = (int)strtol(hexVal, NULL, 16);
+                        
+
+                        /*
                         char hexVal[3] = {'\0', '\0', '\0'};
                         hexVal[0] = *(curr++);
                         hexVal[1] = *(curr);
                         int hexInt = (int)strtol(hexVal, NULL, 16);
+                        */
                         if (hexInt < 33 || hexInt > 127){
                             char hexNum[4];
                             sprintf(hexNum, "%d", hexInt);
@@ -130,6 +166,7 @@ int string_decode( const char *es, char *s ){
                         else{
                             decoded_str[ decoded_i++ ] = (char)hexInt;
                         }
+                        curr--;
 
                     }
 
