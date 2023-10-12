@@ -1,5 +1,5 @@
 #include "../include/main.h"
-#include "../include/token.h"
+#include "../parser.h"
 extern FILE* yyin;
 extern int yyparse();
 extern int yylex();
@@ -9,9 +9,7 @@ extern int parser_result;
 
 int main(int argc, char* argv[]){
 
-    #ifdef YYDEBUG
-        yydebug = 1;
-    #endif
+    
 
     //encode test cases
     if ( argc == 3 && ( strcmp(argv[1],"--encode") == 0 ) ){
@@ -71,10 +69,10 @@ int main(int argc, char* argv[]){
 
         while ( true ){
             int t = yylex();
-            if ( t == 258 ){ printf("scn: %s\n",yytext); break;}
+            if ( t == TOKEN_EOF ){ printf("scn: %s\n",yytext); break;}
 
             printf("token: %d  text: <%s>\n", t, yytext);
-            if( t == 330 ){
+            if( t == TOKEN_ERROR ){
                 printf("Error: Token not valid\n");
                 return 1;
             }
@@ -95,10 +93,10 @@ int main(int argc, char* argv[]){
 
         while ( true ){
             int t = yylex();
-            if ( t == 258 ) break;
+            if ( t == TOKEN_EOF ) break;
 
             printf("token: %d  text: <%s>\n", t, yytext);
-            if( t == 330 ){
+            if( t == TOKEN_ERROR ){
                 printf("Error: Token not valid\n");
                 return 1;
             }
@@ -134,7 +132,7 @@ int main(int argc, char* argv[]){
             return 0;
         }
 
-        
+
 
     }
 

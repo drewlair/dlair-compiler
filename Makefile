@@ -8,12 +8,12 @@ FLAGS = -Wall -g
 all: $(EXEC)
 
 parser.c parser.h token_bison.h: src/parser.bison
-	bison -t -v --defines=parser.h --output=parser.c -v src/parser.bison
+	bison --defines=parser.h --output=parser.c -v src/parser.bison
 
 scanner.c: src/scanner.flex token_bison.h parser.h
 	flex -oscanner.c src/scanner.flex
 
-main.o: src/main.c include/main.h include/encoder.h
+main.o: src/main.c include/main.h include/encoder.h parser.h
 	$(CMP) $(FLAGS) src/main.c -c -o main.o
 
 scanner.o: scanner.c include/token.h
