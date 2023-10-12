@@ -1,0 +1,131 @@
+dfsfdstoken: 259  text: <fxn>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 260  text: <integer>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 309  text: <)>
+token: 283  text: <=>
+token: 304  text: <{>
+token: 294  text: <return>
+token: 259  text: <x>
+token: 276  text: <++>
+token: 274  text: <;>
+token: 305  text: <}>
+token: 259  text: <fxn2>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 310  text: <char>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 295  text: <:>
+token: 310  text: <char>
+token: 296  text: <,>
+token: 259  text: <z>
+token: 295  text: <:>
+token: 264  text: <boolean>
+token: 309  text: <)>
+token: 283  text: <=>
+token: 304  text: <{>
+token: 299  text: <if>
+token: 308  text: <(>
+token: 259  text: <y>
+token: 265  text: <==>
+token: 262  text: <'z'>
+token: 309  text: <)>
+token: 294  text: <return>
+token: 262  text: <'Z'>
+token: 274  text: <;>
+token: 311  text: <else>
+token: 294  text: <return>
+token: 262  text: <'z'>
+token: 274  text: <;>
+token: 305  text: <}>
+token: 259  text: <fxn3>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 310  text: <char>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 295  text: <:>
+token: 273  text: <array>
+token: 306  text: <[>
+token: 307  text: <]>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 295  text: <:>
+token: 310  text: <char>
+token: 296  text: <,>
+token: 259  text: <z>
+token: 295  text: <:>
+token: 273  text: <array>
+token: 306  text: <[>
+token: 307  text: <]>
+token: 273  text: <array>
+token: 306  text: <[>
+token: 307  text: <]>
+token: 264  text: <boolean>
+token: 309  text: <)>
+token: 283  text: <=>
+token: 304  text: <{>
+token: 299  text: <if>
+token: 308  text: <(>
+token: 259  text: <y>
+token: 265  text: <==>
+token: 262  text: <'z'>
+token: 309  text: <)>
+token: 294  text: <return>
+token: 262  text: <'Z'>
+token: 274  text: <;>
+token: 311  text: <else>
+token: 294  text: <return>
+token: 262  text: <'z'>
+token: 274  text: <;>
+token: 305  text: <}>
+opened file
+gotrealtype
+gotrealtype
+incr
+ expression parsed
+return
+ closed(expr)stmt -> closed
+got list
+got f decl
+gotrealtype
+gotrealtype
+gotrealtype
+gotrealtype
+gotchar
+logic
+gotchar
+ expression parsed
+return
+ closed(expr)gotchar
+ expression parsed
+return
+ closed(expr)closed(if closed else closed)stmt -> closed
+got list
+got f decl
+gotrealtype
+gotrealtype
+gotrealtype
+gotrealtype
+gotchar
+logic
+gotchar
+ expression parsed
+return
+ closed(expr)gotchar
+ expression parsed
+return
+ closed(expr)closed(if closed else closed)stmt -> closed
+got list
+got f decl
+got f_decl_listgot f_decl_listgot f_decl_listParse Successful 258

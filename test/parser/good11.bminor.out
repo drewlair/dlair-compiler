@@ -1,0 +1,66 @@
+dfsfdstoken: 259  text: <str>
+token: 295  text: <:>
+token: 263  text: <string>
+token: 283  text: <=>
+token: 270  text: <"this is a string">
+token: 274  text: <;>
+token: 259  text: <str2>
+token: 295  text: <:>
+token: 263  text: <string>
+token: 274  text: <;>
+token: 259  text: <x>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 274  text: <;>
+token: 259  text: <main>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 283  text: <=>
+token: 304  text: <{>
+token: 297  text: <print>
+token: 274  text: <;>
+token: 297  text: <print>
+token: 270  text: <"\n \r \t \0">
+token: 274  text: <;>
+token: 297  text: <print>
+token: 259  text: <x>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 296  text: <,>
+token: 270  text: <"hello">
+token: 296  text: <,>
+token: 272  text: <true>
+token: 296  text: <,>
+token: 272  text: <false>
+token: 274  text: <;>
+token: 297  text: <print>
+token: 259  text: <str>
+token: 296  text: <,>
+token: 270  text: <" str ">
+token: 296  text: <,>
+token: 259  text: <x>
+token: 296  text: <,>
+token: 259  text: <str2>
+token: 274  text: <;>
+token: 305  text: <}>
+opened file
+gotrealtype
+gotstr
+gotrealtype
+gotrealtype
+gotrealtype
+ closed(expr)stmt -> closed
+gotstr
+ closed(expr)stmt -> closed
+gotstr
+got boolean
+got boolean
+ closed(expr)stmt -> closed
+gotstr
+ closed(expr)stmt -> closed
+got list
+got f decl
+got f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listParse Successful 258

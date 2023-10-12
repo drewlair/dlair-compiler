@@ -1,0 +1,73 @@
+dfsfdstoken: 259  text: <main>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 283  text: <=>
+token: 304  text: <{>
+token: 259  text: <x>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 271  text: <5>
+token: 274  text: <;>
+token: 299  text: <if>
+token: 308  text: <(>
+token: 271  text: <4>
+token: 289  text: <<>
+token: 271  text: <5>
+token: 309  text: <)>
+token: 299  text: <if>
+token: 308  text: <(>
+token: 271  text: <10>
+token: 289  text: <<>
+token: 271  text: <20>
+token: 309  text: <)>
+token: 301  text: <for>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 283  text: <=>
+token: 271  text: <0>
+token: 274  text: <;>
+token: 259  text: <x>
+token: 289  text: <<>
+token: 271  text: <5>
+token: 274  text: <;>
+token: 259  text: <x>
+token: 276  text: <++>
+token: 309  text: <)>
+token: 299  text: <if>
+token: 308  text: <(>
+token: 271  text: <4>
+token: 289  text: <<>
+token: 271  text: <5>
+token: 309  text: <)>
+token: 297  text: <print>
+token: 270  text: <"helloo\n">
+token: 274  text: <;>
+token: 311  text: <else>
+token: 297  text: <print>
+token: 270  text: <"hello\n">
+token: 274  text: <;>
+token: 311  text: <else>
+token: 297  text: <print>
+token: 270  text: <"goodbye">
+token: 274  text: <;>
+token: 305  text: <}>
+opened file
+gotrealtype
+gotrealtype
+ closed(expr)stmt -> closed
+logic
+logic
+ expression -> exprlogic
+ expression -> exprincr
+ expression -> exprlogic
+gotstr
+ closed(expr)gotstr
+ closed(expr)closed(if closed else closed)closed(for( closed ))gotstr
+ closed(expr)closed(if closed else closed) open( if closed )stmt -> open
+got list
+got f decl
+got f_decl_listParse Successful 258

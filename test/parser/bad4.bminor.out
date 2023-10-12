@@ -1,0 +1,28 @@
+dfsfdstoken: 259  text: <main>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 283  text: <=>
+token: 304  text: <{>
+token: 301  text: <for>
+token: 308  text: <(>
+token: 259  text: <i>
+token: 283  text: <=>
+token: 271  text: <0>
+token: 274  text: <;>
+token: 259  text: <i>
+token: 276  text: <++>
+token: 309  text: <)>
+token: 304  text: <{>
+token: 297  text: <print>
+token: 259  text: <i>
+token: 274  text: <;>
+token: 305  text: <}>
+token: 305  text: <}>
+opened file
+gotrealtype
+ expression -> exprincr
+ expression -> exprparse error: syntax error
+Parse Error

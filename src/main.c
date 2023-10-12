@@ -1,7 +1,17 @@
 #include "../include/main.h"
+#include "../include/token.h"
+extern FILE* yyin;
+extern int yyparse();
+extern int yylex();
+extern char* yytext;
+extern int parser_result;
 
 
 int main(int argc, char* argv[]){
+
+    #ifdef YYDEBUG
+        yydebug = 1;
+    #endif
 
     //encode test cases
     if ( argc == 3 && ( strcmp(argv[1],"--encode") == 0 ) ){
@@ -53,6 +63,7 @@ int main(int argc, char* argv[]){
     else if ( argc == 3 && ( strcmp(argv[1], "--scan") == 0 ) ){
 
         yyin = fopen(argv[2], "r");
+        printf("eof is %d\n", TOKEN_FLOAT);
         if ( !yyin ){
             printf("Error: Could not Open Test File!\n");
             return 1;
@@ -60,10 +71,10 @@ int main(int argc, char* argv[]){
 
         while ( true ){
             int t = yylex();
-            if ( t == TOKEN_EOF ) break;
+            if ( t == 258 ){ printf("scn: %s\n",yytext); break;}
 
             printf("token: %d  text: <%s>\n", t, yytext);
-            if( t == TOKEN_ERROR ){
+            if( t == 330 ){
                 printf("Error: Token not valid\n");
                 return 1;
             }
@@ -71,6 +82,60 @@ int main(int argc, char* argv[]){
         }
 
         return 0;
+    }
+    else if ( argc == 3 && ( strcmp(argv[1], "--parse") == 0 ) ){
+
+
+        yyin = fopen(argv[2], "r");
+        printf("dfsfds");
+        if ( !yyin ){
+            printf("Error: Could not Open Test File!\n");
+            return 1;
+        }
+
+        while ( true ){
+            int t = yylex();
+            if ( t == 258 ) break;
+
+            printf("token: %d  text: <%s>\n", t, yytext);
+            if( t == 330 ){
+                printf("Error: Token not valid\n");
+                return 1;
+            }
+
+        }
+        rewind(yyin);
+
+        printf("opened file\n");
+        while (!feof(yyin)){
+            if (yyparse() == 1){
+                printf("Parse Error\n");
+                fclose(yyin);
+                return 1;
+            }
+        }
+        fclose(yyin);
+        printf("Parse Successful %d\n", parser_result);
+
+
+        return 0;
+    }
+    else if( argc == 2 && ( strcmp( argv[1], "--test") == 0 ) ){
+
+        yyin = stdin;
+
+        if (yyparse() == 1){
+            printf("failure\n");
+            return 1;
+        }
+        else{
+            printf("success\n");
+            printf("%d\n", parser_result);
+            return 0;
+        }
+
+        
+
     }
 
 

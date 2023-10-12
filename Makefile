@@ -7,20 +7,26 @@ FLAGS = -Wall -g
 
 all: $(EXEC)
 
-scanner.c: src/scanner.flex
+parser.c parser.h token_bison.h: src/parser.bison
+	bison -t -v --defines=parser.h --output=parser.c -v src/parser.bison
+
+scanner.c: src/scanner.flex token_bison.h parser.h
 	flex -oscanner.c src/scanner.flex
 
-scanner.o: scanner.c
-	$(CMP) -c scanner.c -o scanner.o
+main.o: src/main.c include/main.h include/encoder.h
+	$(CMP) $(FLAGS) src/main.c -c -o main.o
 
-$(FUNC).o: src/$(FUNC).c include/$(FUNC).h
-	$(CMP) $(FLAGS) -c src/$(FUNC).c -o $(FUNC).o
+scanner.o: scanner.c include/token.h
+	$(CMP) -g scanner.c -c -o scanner.o
 
-$(MAIN).o: src/$(MAIN).c include/$(FUNC).h include/$(MAIN).h
-	$(CMP) $(FLAGS) -c src/$(MAIN).c -o $(MAIN).o
+parser.o: parser.c parser.h
+	$(CMP) $(FLAGS) parser.c -c -o parser.o
 
-$(EXEC): $(MAIN).o $(FUNC).o scanner.o
-	$(CMP) $(FLAGS) $(MAIN).o $(FUNC).o scanner.o -o exec/$(EXEC)
+encoder.o: src/encoder.c include/encoder.h
+	$(CMP) $(FLAGS) src/encoder.c -c -o encoder.o
+
+$(EXEC): $(MAIN).o $(FUNC).o scanner.o parser.o
+	$(CMP) $(FLAGS) $(MAIN).o $(FUNC).o scanner.o parser.o -o exec/$(EXEC) -lm
 
 test: bin/runtests.sh bin/runscans.sh
 	./bin/runtests.sh
@@ -29,9 +35,16 @@ test: bin/runtests.sh bin/runscans.sh
 scan: bin/runscans.sh
 	./bin/runscans.sh
 
+parse: bin/runparse.sh
+	./bin/runparse.sh
+
 clean:
+
 	rm *.o
-	rm exec/$(EXEC)
 	rm scanner.c
+	rm parser.h
+	rm parser.c
+	rm parser.output
+	rm exec/$(EXEC)
 	rm test/scanner/*.out
 	rm test/encode/*.out

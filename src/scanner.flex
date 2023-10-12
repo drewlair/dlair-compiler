@@ -1,5 +1,6 @@
 %{
-#include "include/token.h"
+#include "parser.h"
+
 %}
 SPECIAL_CHARS   (\\n|\\a|\\b|\\e|\\f|\\r|\\t|\v|\\|\0)
 SPACES          [\t\ \n]
@@ -35,8 +36,8 @@ else                 { return TOKEN_ELSE; }
 :                    { return TOKEN_COLON; }
 \^                    { return TOKEN_EXP; }
 ,                    { return TOKEN_COMMA; }
-\/\/[^\n]*\n        { return TOKEN_CPP_COMMENT; }
-(\/\*(([^(\*|\*\/)])|(\*[^\/])|(\*\*[^\/])|([^\*]\/)|(\/\/\/))*\*\/)|(\/\*\*\*\/)|(\/\*\/\*\/)  { return TOKEN_C_COMMENT; }
+\/\/[^\n]*\n        { /* CPP COMMENT */ }
+\/\*([^*]|\*+[^\/])*\*+\/  { /* C Comment */ }
 \/                   { return TOKEN_DIV; }
 \*                   { return TOKEN_MULT; }
 \+\+                 { return TOKEN_INCREMENT; }
@@ -56,6 +57,7 @@ else                 { return TOKEN_ELSE; }
 [0-9]{1,19}            { return TOKEN_INTEGER_LITERAL; }
 \'([a-zA-Z0-9]|\\.)\'    { return TOKEN_CHAR_LITERAL; }
 \"([^\"\\\n]+\\.|[^\"\n])*\"      { return TOKEN_STRING_LITERAL; }
+<<EOF>>              { return TOKEN_EOF; }
 .                  { return TOKEN_ERROR; }
 
 

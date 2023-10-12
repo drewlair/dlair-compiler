@@ -1,0 +1,718 @@
+dfsfdstoken: 259  text: <gfx_open>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 259  text: <width>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <height>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <title>
+token: 295  text: <:>
+token: 263  text: <string>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_point>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_line>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 259  text: <x1>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <y1>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <x2>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <y2>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_color>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 259  text: <red>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <green>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <blue>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_clear>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_clear_color>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 259  text: <red>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <green>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <blue>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_wait>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 310  text: <char>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_xpos>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 260  text: <integer>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_ypos>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 260  text: <integer>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_xsize>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 260  text: <integer>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_ysize>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 260  text: <integer>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_event_waiting>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 264  text: <boolean>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_flush>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 260  text: <integer>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <usleep>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 259  text: <usecs>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <rand>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 260  text: <integer>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <draw_box>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 296  text: <,>
+token: 259  text: <size>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 309  text: <)>
+token: 283  text: <=>
+token: 304  text: <{>
+token: 259  text: <gfx_color>
+token: 308  text: <(>
+token: 271  text: <255>
+token: 296  text: <,>
+token: 271  text: <255>
+token: 296  text: <,>
+token: 271  text: <255>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_line>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 296  text: <,>
+token: 259  text: <x>
+token: 280  text: <+>
+token: 259  text: <size>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_line>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 280  text: <+>
+token: 259  text: <size>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 296  text: <,>
+token: 259  text: <x>
+token: 280  text: <+>
+token: 259  text: <size>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 280  text: <+>
+token: 259  text: <size>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_line>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 280  text: <+>
+token: 259  text: <size>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 280  text: <+>
+token: 259  text: <size>
+token: 296  text: <,>
+token: 259  text: <x>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 280  text: <+>
+token: 259  text: <size>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_line>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 280  text: <+>
+token: 259  text: <size>
+token: 296  text: <,>
+token: 259  text: <x>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 305  text: <}>
+token: 259  text: <main>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 260  text: <integer>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 283  text: <=>
+token: 304  text: <{>
+token: 259  text: <precision>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 271  text: <100>
+token: 274  text: <;>
+token: 259  text: <xsize>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 271  text: <500>
+token: 274  text: <;>
+token: 259  text: <ysize>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 271  text: <500>
+token: 274  text: <;>
+token: 259  text: <x>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 259  text: <precision>
+token: 279  text: <*>
+token: 259  text: <xsize>
+token: 282  text: </>
+token: 271  text: <2>
+token: 274  text: <;>
+token: 259  text: <y>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 259  text: <precision>
+token: 279  text: <*>
+token: 259  text: <ysize>
+token: 282  text: </>
+token: 271  text: <2>
+token: 274  text: <;>
+token: 259  text: <vx>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 259  text: <precision>
+token: 279  text: <*>
+token: 271  text: <3>
+token: 274  text: <;>
+token: 259  text: <vy>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 259  text: <precision>
+token: 279  text: <*>
+token: 281  text: <->
+token: 271  text: <5>
+token: 274  text: <;>
+token: 259  text: <deltat>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 271  text: <100>
+token: 274  text: <;>
+token: 259  text: <gfx_open>
+token: 308  text: <(>
+token: 259  text: <xsize>
+token: 296  text: <,>
+token: 259  text: <ysize>
+token: 296  text: <,>
+token: 270  text: <"Bounce!">
+token: 309  text: <)>
+token: 274  text: <;>
+token: 301  text: <for>
+token: 308  text: <(>
+token: 274  text: <;>
+token: 274  text: <;>
+token: 309  text: <)>
+token: 304  text: <{>
+token: 297  text: <print>
+token: 270  text: <"x: ">
+token: 296  text: <,>
+token: 259  text: <x>
+token: 296  text: <,>
+token: 270  text: <" y: ">
+token: 296  text: <,>
+token: 259  text: <y>
+token: 296  text: <,>
+token: 270  text: <" vx: ">
+token: 296  text: <,>
+token: 259  text: <vx>
+token: 296  text: <,>
+token: 270  text: <" vy: ">
+token: 296  text: <,>
+token: 259  text: <vy>
+token: 296  text: <,>
+token: 270  text: <"\n">
+token: 274  text: <;>
+token: 299  text: <if>
+token: 308  text: <(>
+token: 259  text: <gfx_event_waiting>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 309  text: <)>
+token: 304  text: <{>
+token: 259  text: <c>
+token: 295  text: <:>
+token: 310  text: <char>
+token: 274  text: <;>
+token: 259  text: <c>
+token: 283  text: <=>
+token: 259  text: <gfx_wait>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 299  text: <if>
+token: 308  text: <(>
+token: 259  text: <c>
+token: 265  text: <==>
+token: 262  text: <'q'>
+token: 309  text: <)>
+token: 294  text: <return>
+token: 271  text: <0>
+token: 274  text: <;>
+token: 259  text: <x>
+token: 283  text: <=>
+token: 259  text: <gfx_xpos>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 279  text: <*>
+token: 259  text: <precision>
+token: 274  text: <;>
+token: 259  text: <y>
+token: 283  text: <=>
+token: 259  text: <gfx_ypos>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 279  text: <*>
+token: 259  text: <precision>
+token: 274  text: <;>
+token: 259  text: <vx>
+token: 283  text: <=>
+token: 271  text: <5>
+token: 279  text: <*>
+token: 259  text: <precision>
+token: 274  text: <;>
+token: 305  text: <}>
+token: 259  text: <vy>
+token: 283  text: <=>
+token: 259  text: <vy>
+token: 280  text: <+>
+token: 271  text: <1>
+token: 279  text: <*>
+token: 259  text: <precision>
+token: 274  text: <;>
+token: 299  text: <if>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 289  text: <<>
+token: 271  text: <0>
+token: 268  text: <&&>
+token: 259  text: <vx>
+token: 289  text: <<>
+token: 271  text: <0>
+token: 309  text: <)>
+token: 304  text: <{>
+token: 259  text: <vx>
+token: 283  text: <=>
+token: 281  text: <->
+token: 271  text: <9>
+token: 279  text: <*>
+token: 259  text: <vx>
+token: 282  text: </>
+token: 271  text: <10>
+token: 274  text: <;>
+token: 305  text: <}>
+token: 299  text: <if>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 290  text: <>>
+token: 308  text: <(>
+token: 259  text: <xsize>
+token: 279  text: <*>
+token: 259  text: <precision>
+token: 309  text: <)>
+token: 268  text: <&&>
+token: 259  text: <vx>
+token: 290  text: <>>
+token: 271  text: <0>
+token: 309  text: <)>
+token: 304  text: <{>
+token: 259  text: <vx>
+token: 283  text: <=>
+token: 281  text: <->
+token: 271  text: <9>
+token: 279  text: <*>
+token: 259  text: <vx>
+token: 282  text: </>
+token: 271  text: <10>
+token: 274  text: <;>
+token: 305  text: <}>
+token: 299  text: <if>
+token: 308  text: <(>
+token: 259  text: <y>
+token: 290  text: <>>
+token: 308  text: <(>
+token: 259  text: <ysize>
+token: 279  text: <*>
+token: 259  text: <precision>
+token: 309  text: <)>
+token: 268  text: <&&>
+token: 259  text: <vy>
+token: 290  text: <>>
+token: 271  text: <0>
+token: 309  text: <)>
+token: 304  text: <{>
+token: 259  text: <vy>
+token: 283  text: <=>
+token: 281  text: <->
+token: 271  text: <9>
+token: 279  text: <*>
+token: 259  text: <vy>
+token: 282  text: </>
+token: 271  text: <10>
+token: 274  text: <;>
+token: 305  text: <}>
+token: 259  text: <x>
+token: 283  text: <=>
+token: 259  text: <x>
+token: 280  text: <+>
+token: 259  text: <vx>
+token: 279  text: <*>
+token: 259  text: <deltat>
+token: 282  text: </>
+token: 259  text: <precision>
+token: 274  text: <;>
+token: 259  text: <y>
+token: 283  text: <=>
+token: 259  text: <y>
+token: 280  text: <+>
+token: 259  text: <vy>
+token: 279  text: <*>
+token: 259  text: <deltat>
+token: 282  text: </>
+token: 259  text: <precision>
+token: 274  text: <;>
+token: 259  text: <gfx_clear>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <draw_box>
+token: 308  text: <(>
+token: 259  text: <x>
+token: 282  text: </>
+token: 259  text: <precision>
+token: 296  text: <,>
+token: 259  text: <y>
+token: 282  text: </>
+token: 259  text: <precision>
+token: 296  text: <,>
+token: 271  text: <25>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <gfx_flush>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 259  text: <usleep>
+token: 308  text: <(>
+token: 259  text: <deltat>
+token: 279  text: <*>
+token: 259  text: <precision>
+token: 309  text: <)>
+token: 274  text: <;>
+token: 305  text: <}>
+token: 305  text: <}>
+opened file
+gotrealtype
+gotrealtype
+gotrealtype
+gotrealtype
+got random func
+got f decl
+gotrealtype
+gotrealtype
+gotrealtype
+got random func
+got f decl
+gotrealtype
+gotrealtype
+gotrealtype
+gotrealtype
+gotrealtype
+got random func
+got f decl
+gotrealtype
+gotrealtype
+gotrealtype
+gotrealtype
+got random func
+got f decl
+gotrealtype
+got random func
+got f decl
+gotrealtype
+gotrealtype
+gotrealtype
+gotrealtype
+got random func
+got f decl
+gotrealtype
+got random func
+got f decl
+gotrealtype
+got random func
+got f decl
+gotrealtype
+got random func
+got f decl
+gotrealtype
+got random func
+got f decl
+gotrealtype
+got random func
+got f decl
+gotrealtype
+got random func
+got f decl
+gotrealtype
+got random func
+got f decl
+gotrealtype
+gotrealtype
+got random func
+got f decl
+gotrealtype
+got random func
+got f decl
+gotrealtype
+gotrealtype
+gotrealtype
+gotrealtype
+ expression parsed
+ closed(expr)stmt -> closed
+add expression parsed
+ closed(expr)stmt -> closed
+addaddadd expression parsed
+ closed(expr)stmt -> closed
+addaddadd expression parsed
+ closed(expr)stmt -> closed
+add expression parsed
+ closed(expr)stmt -> closed
+got list
+got f decl
+gotrealtype
+gotrealtype
+ closed(expr)stmt -> closed
+gotrealtype
+ closed(expr)stmt -> closed
+gotrealtype
+ closed(expr)stmt -> closed
+gotrealtype
+mult
+div
+ closed(expr)stmt -> closed
+gotrealtype
+mult
+div
+ closed(expr)stmt -> closed
+gotrealtype
+mult
+ closed(expr)stmt -> closed
+gotrealtype
+got neg
+mult
+ closed(expr)stmt -> closed
+gotrealtype
+ closed(expr)stmt -> closed
+gotstr
+ expression parsed
+ closed(expr)stmt -> closed
+gotstr
+gotstr
+gotstr
+gotstr
+gotstr
+ closed(expr)stmt -> closed
+gotrealtype
+ closed(expr)stmt -> closed
+ expression parsed
+ closed(expr)stmt -> closed
+gotchar
+logic
+ expression parsed
+return
+ closed(expr) open( if closed )stmt -> open
+mult
+ expression parsed
+ closed(expr)stmt -> closed
+mult
+ expression parsed
+ closed(expr)stmt -> closed
+mult
+ expression parsed
+ closed(expr)stmt -> closed
+ closed(expr) open( if closed )stmt -> open
+mult
+add expression parsed
+ closed(expr)stmt -> closed
+and
+logic
+logic
+got neg
+mult
+div
+ expression parsed
+ closed(expr)stmt -> closed
+ closed(expr) open( if closed )stmt -> open
+mult
+and
+logic
+logic
+got neg
+mult
+div
+ expression parsed
+ closed(expr)stmt -> closed
+ closed(expr) open( if closed )stmt -> open
+mult
+and
+logic
+logic
+got neg
+mult
+div
+ expression parsed
+ closed(expr)stmt -> closed
+ closed(expr) open( if closed )stmt -> open
+mult
+div
+add expression parsed
+ closed(expr)stmt -> closed
+mult
+div
+add expression parsed
+ closed(expr)stmt -> closed
+ expression parsed
+ closed(expr)stmt -> closed
+div
+div
+ expression parsed
+ closed(expr)stmt -> closed
+ expression parsed
+ closed(expr)stmt -> closed
+mult
+ expression parsed
+ closed(expr)stmt -> closed
+ closed(expr)closed(for( closed ))stmt -> closed
+got list
+got f decl
+got f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listParse Successful 258

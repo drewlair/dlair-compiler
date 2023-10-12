@@ -1,0 +1,63 @@
+dfsfdstoken: 259  text: <x>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 271  text: <5>
+token: 274  text: <;>
+token: 259  text: <y>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 274  text: <;>
+token: 259  text: <z>
+token: 295  text: <:>
+token: 310  text: <char>
+token: 283  text: <=>
+token: 262  text: <'A'>
+token: 274  text: <;>
+token: 259  text: <fxn>
+token: 295  text: <:>
+token: 293  text: <function>
+token: 292  text: <void>
+token: 308  text: <(>
+token: 309  text: <)>
+token: 283  text: <=>
+token: 304  text: <{>
+token: 259  text: <x>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 274  text: <;>
+token: 259  text: <y>
+token: 295  text: <:>
+token: 260  text: <integer>
+token: 283  text: <=>
+token: 271  text: <16>
+token: 274  text: <;>
+token: 259  text: <w>
+token: 295  text: <:>
+token: 264  text: <boolean>
+token: 283  text: <=>
+token: 272  text: <true>
+token: 274  text: <;>
+token: 259  text: <q>
+token: 295  text: <:>
+token: 264  text: <boolean>
+token: 274  text: <;>
+token: 305  text: <}>
+opened file
+gotrealtype
+gotrealtype
+gotrealtype
+gotchar
+gotrealtype
+gotrealtype
+ closed(expr)stmt -> closed
+gotrealtype
+ closed(expr)stmt -> closed
+gotrealtype
+got boolean
+ closed(expr)stmt -> closed
+gotrealtype
+ closed(expr)stmt -> closed
+got list
+got f decl
+got f_decl_listgot f_decl_listgot f_decl_listgot f_decl_listParse Successful 258
