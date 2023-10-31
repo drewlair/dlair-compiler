@@ -35,6 +35,7 @@ typedef enum {
     EXPR_LIST,
     EXPR_LIST_INIT,
 	EXPR_INDEX_LIST,
+	EXPR_PAREN,
 } expr_t;
 
 struct expr {

@@ -292,7 +292,7 @@ str_val             : TOKEN_STRING_LITERAL  { $$ = strdup(yytext); }
                     ;
 
 func_expr           : ident_val param_init { $$ = expr_create_name( $1, EXPR_IDENT_LITERAL, $2, NULL); }
-                    | TOKEN_OPEN_PAR expr_init TOKEN_CLOSED_PAR { $$ = $2; }
+                    | TOKEN_OPEN_PAR expr_init TOKEN_CLOSED_PAR { $$ = expr_create( EXPR_PAREN, $2, NULL); }
                     ;
 
 ident_val           : TOKEN_IDENT   { $$ = strdup(yytext); }

@@ -1,0 +1,6 @@
+x: integer = 5;
+func: function void () = {
+    print "hello world";
+    j: float = ((4 / 3));
+    return;
+}

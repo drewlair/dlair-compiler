@@ -260,6 +260,15 @@ extern void expr_print( struct expr* e ){
             }
             printf("%s",e->name);
             break;
+        case EXPR_PAREN:
+
+            while (e->left && e->left->kind == EXPR_PAREN){
+                e = e->left;
+            }
+            printf("(");
+            expr_print(e->left);
+            printf(")");
+            break;
 
         default:
             printf("bad expr kind %d\n",e->kind);

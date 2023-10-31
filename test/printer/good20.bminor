@@ -1,0 +1,14 @@
+
+fx: function void (x: integer) = {
+    print "yo";
+    x: void;
+}
+
+fxn3: function char ( x: array [] integer, y: char, z: array [] array [] boolean )  =
+{
+	if (y=='z')
+		return 'Z';
+	else
+		return 'z';
+
+}
