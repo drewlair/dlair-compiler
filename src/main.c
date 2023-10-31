@@ -1,15 +1,17 @@
 #include "../include/main.h"
 #include "../parser.h"
+#include "../include/decl.h"
+extern struct expr* expr_create(expr_t kind, struct expr *left, struct expr *right );
 extern FILE* yyin;
 extern int yyparse();
 extern int yylex();
 extern char* yytext;
-extern int parser_result;
+extern struct decl* parser_result;
 
 
 int main(int argc, char* argv[]){
 
-    
+
 
     //encode test cases
     if ( argc == 3 && ( strcmp(argv[1],"--encode") == 0 ) ){
@@ -85,7 +87,7 @@ int main(int argc, char* argv[]){
 
 
         yyin = fopen(argv[2], "r");
-        printf("dfsfds");
+
         if ( !yyin ){
             printf("Error: Could not Open Test File!\n");
             return 1;
@@ -106,6 +108,7 @@ int main(int argc, char* argv[]){
 
         printf("opened file\n");
         while (!feof(yyin)){
+
             if (yyparse() == 1){
                 printf("Parse Error\n");
                 fclose(yyin);
@@ -113,10 +116,50 @@ int main(int argc, char* argv[]){
             }
         }
         fclose(yyin);
-        printf("Parse Successful %d\n", parser_result);
+        printf("Parse Successful\n");
 
 
         return 0;
+    }
+    else if(argc == 3 && ( strcmp( argv[1], "--print") == 0) ){
+
+        yyin = fopen(argv[2], "r");
+
+        if ( !yyin ){
+            printf("Error: Could not Open Test File!\n");
+            return 1;
+        }
+
+        while ( true ){
+            int t = yylex();
+            if ( t == TOKEN_EOF ) break;
+
+            //printf("token: %d  text: <%s>\n", t, yytext);
+            if( t == TOKEN_ERROR ){
+                printf("Error: Token not valid\n");
+                return 1;
+            }
+
+        }
+        rewind(yyin);
+
+
+        if (!yyin){
+            printf("file pointer error\n");
+        }
+        while (!feof(yyin)){
+
+            if (yyparse() == 1){
+                printf("Parse Error\n");
+                fclose(yyin);
+                return 1;
+            }
+        }
+        fclose(yyin);
+
+
+        decl_print(parser_result, 0);
+
     }
     else if( argc == 2 && ( strcmp( argv[1], "--test") == 0 ) ){
 
@@ -128,7 +171,7 @@ int main(int argc, char* argv[]){
         }
         else{
             printf("success\n");
-            printf("%d\n", parser_result);
+
             return 0;
         }
 
