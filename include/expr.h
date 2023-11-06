@@ -33,9 +33,12 @@ typedef enum {
 	EXPR_STRING_LITERAL,
 	EXPR_IDENT_LITERAL,
     EXPR_LIST,
+	EXPR_LIST_ARRAY,
     EXPR_LIST_INIT,
 	EXPR_INDEX_LIST,
+	EXPR_INDEX,
 	EXPR_PAREN,
+	EXPR_CALL,
 } expr_t;
 
 struct expr {
@@ -59,9 +62,9 @@ struct expr_list {
 };
 */
 extern struct expr * expr_create( expr_t kind, struct expr *left, struct expr *right );
-extern struct expr * expr_create_name( const char *n, expr_t kind, struct expr* left, struct expr* right );
+extern struct expr * expr_create_name( const char *n, expr_t kind);
 extern struct expr * expr_create_integer_literal( int c );
-extern struct expr * expr_create_boolean_literal( const char* str );
+extern struct expr * expr_create_boolean_literal( const char *str );
 extern struct expr * expr_create_float_literal( float f );
 extern struct expr * expr_create_char_literal( char c );
 extern struct expr * expr_create_string_literal( const char *str );

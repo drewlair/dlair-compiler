@@ -1,0 +1,4 @@
+c: function void (x: integer) = {
+    arr:array [10] integer = {{1, 2},{3,4}};
+    return arr;
+}

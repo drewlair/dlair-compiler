@@ -7,6 +7,18 @@ FLAGS = -Wall -g
 
 all: $(EXEC)
 
+resolve.o: src/resolve.c include/resolve.h include/main.h include/symbol.h
+	$(CMP) $(FLAGS) src/resolve.c -c -o resolve.o
+
+symbol.o: src/symbol.c include/symbol.h 
+	$(CMP) $(FLAGS) src/symbol.c -c -o symbol.o
+
+ht.o: src/hash_table.c include/hash_table.h
+	$(CMP) $(FLAGS) src/hash_table.c -c -o ht.o
+
+scope.o: src/scope.c include/scope.h
+	$(CMP) $(FLAGS) src/scope.c -c -o scope.o
+
 expr.o: src/expr.c include/expr.h include/encoder.h
 	$(CMP) $(FLAGS) src/expr.c -c -o expr.o
 
@@ -40,11 +52,11 @@ parser.o: parser.c parser.h include/type.h
 encoder.o: src/encoder.c include/encoder.h
 	$(CMP) $(FLAGS) src/encoder.c -c -o encoder.o
 
-$(EXEC): $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o
-	$(CMP) $(FLAGS) $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o -o exec/$(EXEC) -lm
+$(EXEC): $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o scope.o ht.o resolve.o symbol.o
+	$(CMP) $(FLAGS) $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o scope.o ht.o resolve.o symbol.o -o exec/$(EXEC) -lm
 
-test: bin/runprints.sh
-	./bin/runprints.sh
+test: bin/runresolve.sh
+	./bin/runresolve.sh
 
 scan: bin/runscans.sh
 	./bin/runscans.sh
@@ -55,6 +67,9 @@ parse: bin/runparse.sh
 print: bin/runprints.sh
 	./bin/runprints.sh
 
+resolve: bin/runresolve.sh 
+	./bin/runresolve.sh
+
 clean:
 
 	rm *.o
@@ -63,6 +78,8 @@ clean:
 	rm parser.c
 	rm parser.output
 	rm exec/$(EXEC)
+	rm test/resolver/*.bminor.out
+	rm test/printer/*.bminor.out
 	rm test/parser/*.bminor.out
 	rm test/scanner/*.bminor.out
 	rm test/encode/*.bminor.out

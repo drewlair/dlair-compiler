@@ -24,7 +24,7 @@ void stmt_print( struct stmt* s, int indent ){
     if (!s){
         return;
     }
-
+    printf("in stmt\n");
 
     switch (s->kind){
 
@@ -76,8 +76,21 @@ void stmt_print( struct stmt* s, int indent ){
             for (int i = 0; i < indent; i++){
                 printf("\t");
             }
+            printf("stmt_expr:\n");
+            if (s->init_expr->left && s->init_expr->right){
+                printf("hoopla: %d\n",s->init_expr->kind);
+                if (s->init_expr->kind == EXPR_CALL) printf("is a call\n");
+                if (s->init_expr->left->kind == EXPR_IDENT_LITERAL) printf("ident is right\n");
+                if (s->init_expr->right->kind == EXPR_LIST) printf("list is right\n");
+                if (!s->init_expr->right->right) printf("extra list doesn't exist\n");
+                if (s->init_expr->right->left) printf("got this num %d",s->init_expr->right->left->literal_value);
+            }
+            else{
+                printf("kind: %d",s->init_expr->left->kind);
+                if (s->init_expr->right) printf("got %d",s->init_expr->right->kind);
+            }
             expr_print(s->init_expr);
-            printf(";");
+            printf("S;");
             break;
         case STMT_IF_ELSE:
             for (int i = 0; i < indent; i++){

@@ -8,7 +8,7 @@ extern struct expr* expr_create( expr_t kind, struct expr *left, struct expr *ri
     e->kind = kind;
     e->left = left;
     e->right = right;
-    e->literal_value = 0;
+
 
 
 
@@ -16,24 +16,19 @@ extern struct expr* expr_create( expr_t kind, struct expr *left, struct expr *ri
     return e;
 }
 
-extern struct expr* expr_create_name( const char* n, expr_t kind, struct expr* left, struct expr* right ){
+extern struct expr* expr_create_name( const char* n, expr_t kind ){
     struct expr *e = malloc(sizeof(struct expr));
-
-
 
     e->name = n;
     e->kind = kind;
-    e->left = left;
-    e->right = right;
-
-
+    e->left = NULL;
+    e->right = NULL;
 
     return e;
 
 }
 
 extern struct expr* expr_create_integer_literal( int c ){
-
     struct expr* e = malloc( sizeof(struct expr));
     e->literal_value = c;
     e->left = NULL;
@@ -90,18 +85,7 @@ extern struct expr* expr_create_string_literal( const char *str ){
     e->left = NULL;
     e->right = NULL;
     e->kind = EXPR_STRING_LITERAL;
-    /*
-    char decoded_str[strlen(str)+1];
-    memset(decoded_str,'\0',strlen(str)+1);
-    if (string_decode(str, decoded_str) == 1){
-        printf("bad string\n");
-        free(str);
-        return NULL;
-    }
 
-    e->string_literal = strdup(decoded_str);
-    free(str);
-    */
     e->string_literal = str;
 
 
@@ -212,21 +196,19 @@ extern void expr_print( struct expr* e ){
             expr_print(e->left);
             printf("--");
             break;
-        case EXPR_LIST_INIT:
+        case EXPR_LIST_ARRAY:
             printf("{");
             expr_print(e->left);
-            if(e->right){
-                printf(", ");
-                expr_print(e->right);
-            }
             printf("}");
             break;
         case EXPR_LIST:
+        printf("INlist");
             expr_print(e->left);
             if(e->right){
                 printf(", ");
                 expr_print(e->right);
             }
+            printf("outlist");
             break;
         case EXPR_INDEX_LIST:
             printf("[");
@@ -234,8 +216,21 @@ extern void expr_print( struct expr* e ){
             printf("]");
             expr_print(e->right);
             break;
+        case EXPR_INDEX:
+            expr_print(e->left);
+            expr_print(e->right);
+            break;
+        case EXPR_CALL:
+            printf("got a call\n");
+            expr_print(e->left);
+            printf("IDED");
+            printf("( ");
+            expr_print(e->right);
+            printf("EXPRD");
+            printf(" )F");
+            break;
         case EXPR_INTEGER_LITERAL:
-            printf("%d", e->literal_value);
+            printf("%dD", e->literal_value);
             break;
         case EXPR_FLOAT_LITERAL:
             printf("%g",e->float_literal);
@@ -261,7 +256,6 @@ extern void expr_print( struct expr* e ){
             printf("%s",e->name);
             break;
         case EXPR_PAREN:
-
             while (e->left && e->left->kind == EXPR_PAREN){
                 e = e->left;
             }

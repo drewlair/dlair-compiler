@@ -1,0 +1,4 @@
+fxn: function integer () = {
+    di(0);
+    return;
+}

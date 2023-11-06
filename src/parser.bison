@@ -78,7 +78,7 @@ for use by scanner.c.
 
 };
 
-%type <expr> expression expr value unary incr n1 e1 expr_init expr_list func_expr param_init end_declaration expr_list_init;
+%type <expr> expression expr value unary incr n1 e1 expr_init expr_list func_expr end_declaration func_call arr_call index;
 %type <stmt> o_statement_list statement_list statement end_func_decl open_stmt closed_stmt non_if return_expr print_expr non_return non_stmt_list;
 %type <decl> f_decl_list f_declaration;
 %type <param_list> decl_list decl_list_init;
@@ -213,16 +213,12 @@ closed_stmt         : non_if { $$ = $1; }
                     | TOKEN_FOR TOKEN_OPEN_PAR expr TOKEN_SEMICOLON expr TOKEN_SEMICOLON expr TOKEN_CLOSED_PAR closed_stmt { $$ = stmt_create( STMT_FOR, NULL, $3, $5, $7, $9, NULL, NULL ); }
                     ;
 
-expr_init           : expr_list_init { $$ = $1; }
+expr_init           : expr_list { $$ = $1; }
                     | { $$ = NULL; }
                     ;
 
-expr_list_init      : expression TOKEN_COMMA expr_list { $$ = expr_create( EXPR_LIST_INIT, $1, $3); }
-                    | expression { $$ = $1; }
-                    ;
-
 expr_list           : expression TOKEN_COMMA expr_list { $$ = expr_create(EXPR_LIST, $1, $3); }
-                    | expression { $$ = $1; }
+                    | expression { $$ = expr_create( EXPR_LIST, $1, NULL); }
                     ;
 
 
@@ -273,7 +269,8 @@ value               : int_val {  $$ = expr_create_integer_literal($1); }
                     | char_val { $$ = expr_create_char_literal($1[1]); }
                     | str_val { $$ = expr_create_string_literal($1); }
                     | bool_val { $$ = expr_create_boolean_literal($1);}
-                    | TOKEN_OPEN_BRACK expr_list TOKEN_CLOSED_BRACK { $$ = $2; }
+                    | TOKEN_OPEN_PAR expr_init TOKEN_CLOSED_PAR { $$ = expr_create( EXPR_PAREN, $2, NULL); }
+                    | TOKEN_OPEN_BRACK expr_list TOKEN_CLOSED_BRACK { $$ = expr_create( EXPR_LIST_ARRAY, $2, NULL ); }
                     ;
 
 int_val             : TOKEN_INTEGER_LITERAL { $$ = atoi(yytext); }
@@ -291,16 +288,22 @@ char_val            : TOKEN_CHAR_LITERAL    { $$ = yytext; }
 str_val             : TOKEN_STRING_LITERAL  { $$ = strdup(yytext); }
                     ;
 
-func_expr           : ident_val param_init { $$ = expr_create_name( $1, EXPR_IDENT_LITERAL, $2, NULL); }
-                    | TOKEN_OPEN_PAR expr_init TOKEN_CLOSED_PAR { $$ = expr_create( EXPR_PAREN, $2, NULL); }
+func_expr           : ident_val { $$ = expr_create_name( $1, EXPR_IDENT_LITERAL ); }
+                    | func_call { $$ = $1; }
+                    | arr_call  { $$ = $1; }
+                    ;
+
+func_call           : ident_val TOKEN_OPEN_PAR expr_init TOKEN_CLOSED_PAR { $$ = expr_create( EXPR_CALL, expr_create_name( $1, EXPR_IDENT_LITERAL ), $3); }
+                    ;
+
+arr_call            : ident_val index { $$ = expr_create( EXPR_INDEX, expr_create_name( $1, EXPR_IDENT_LITERAL ), $2 ); }
+                    ;
+
+index               : TOKEN_OPEN_BRACE expression TOKEN_CLOSED_BRACE index { $$ = expr_create( EXPR_INDEX_LIST, $2, $4); }
+                    | TOKEN_OPEN_BRACE expression TOKEN_CLOSED_BRACE { $$ = expr_create( EXPR_INDEX_LIST, $2, NULL); }
                     ;
 
 ident_val           : TOKEN_IDENT   { $$ = strdup(yytext); }
-                    ;
-
-param_init          : TOKEN_OPEN_PAR expr_init TOKEN_CLOSED_PAR { $$ = $2; }
-                    | TOKEN_OPEN_BRACE expression TOKEN_CLOSED_BRACE param_init { $$ = expr_create( EXPR_INDEX_LIST, $2, $4); }
-                    | { $$ = NULL; }
                     ;
 
 
