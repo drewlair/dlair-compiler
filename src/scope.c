@@ -11,7 +11,7 @@ void scope_enter(){
     if (!stack){
         stack = newStack;
         stack->prev = NULL;
-        stack->size = 0;
+        stack->size = 1;
         stack->localCount = 1;
     }
     else{
@@ -39,8 +39,14 @@ void scope_exit(){
 
 void scope_bind( const char *name, struct symbol* s ){
     if (hash_table_insert( stack->ht, name, s ) != 1){
-        hash_table_remove( stack->ht, name );
-        hash_table_insert( stack->ht, name, s);
+        if (s->type->kind == TYPE_FUNCTION){
+            printf("resolve error: redeclaring function %s\n",name);
+            resolver_result = 1;
+        } else{
+            hash_table_remove( stack->ht, name );
+            hash_table_insert( stack->ht, name, s);
+        }
+        
     }
     return;
 
@@ -53,9 +59,11 @@ void scope_bind( const char *name, struct symbol* s ){
 struct symbol *scope_lookup( const char *name ){
     struct stack_node *stackPtr = stack;
     struct symbol *s = hash_table_lookup(stackPtr->ht, name);
+    if (s) return s;
+    stackPtr = stackPtr->prev;
     while (stackPtr && !s){
-        stackPtr = stackPtr->prev;
         s = hash_table_lookup(stackPtr->ht, name);
+        stackPtr = stackPtr->prev;
     }
     return s;
 

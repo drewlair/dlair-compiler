@@ -1,8 +1,0 @@
-/* empty array initializer */
-
-simplefunc: function void () = {
-     x: integer = 10;
-     y: integer = 20;
-
-     p: array [5] integer = {};
-}

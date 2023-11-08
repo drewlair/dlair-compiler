@@ -13,3 +13,4 @@ struct stack_node{
 };
 
 struct stack_node* stack;
+int resolver_result;

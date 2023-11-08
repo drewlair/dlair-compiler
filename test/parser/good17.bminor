@@ -17,3 +17,8 @@ simplefunc: function boolean ( x: integer, y: integer ) = {
      return v;
 
 }
+
+nullArr: function void ( x: array [] integer ) = {
+     print "cool";
+     x: array [3] integer;
+}

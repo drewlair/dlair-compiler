@@ -2,7 +2,7 @@
 /* Try decls and stmts and exprs together. */
 /* Add some float */
 
-simplefunc: function boolean ( x: integer, y: integer ) = {
+simplefunc: function boolean ( x: integer, y: integer, z: array [] float ) = {
 
      // A declaration
      z: integer = x * y;

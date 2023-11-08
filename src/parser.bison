@@ -82,7 +82,7 @@ for use by scanner.c.
 %type <stmt> o_statement_list statement_list statement end_func_decl open_stmt closed_stmt non_if return_expr print_expr non_return non_stmt_list;
 %type <decl> f_decl_list f_declaration;
 %type <param_list> decl_list decl_list_init;
-%type <type> types real_types TOKEN_INTEGER TOKEN_FLOAT TOKEN_BOOLEAN TOKEN_CHAR TOKEN_STRING TOKEN_AUTO TOKEN_VOID TOKEN_FUNCTION TOKEN_ARR;
+%type <type> types param_types real_types TOKEN_INTEGER TOKEN_FLOAT TOKEN_BOOLEAN TOKEN_CHAR TOKEN_STRING TOKEN_AUTO TOKEN_VOID TOKEN_FUNCTION TOKEN_ARR;
 %type <int_val> int_val;
 %type <float_val> float_val;
 %type <str_val> str_val bool_val ident_val char_val;
@@ -136,8 +136,8 @@ decl_list_init      : decl_list { $$ = $1; } // normally list_decl decl_list
                     | { $$ = NULL; }
                     ;
 
-decl_list           : ident_val TOKEN_COLON types TOKEN_COMMA decl_list { $$ = param_list_create($1, $3, $5); }
-                    | ident_val TOKEN_COLON types { $$ = param_list_create( $1, $3, NULL); }
+decl_list           : ident_val TOKEN_COLON param_types TOKEN_COMMA decl_list { $$ = param_list_create($1, $3, $5); }
+                    | ident_val TOKEN_COLON param_types { $$ = param_list_create( $1, $3, NULL); }
                     ;
 
 f_declaration       : ident_val TOKEN_COLON TOKEN_FUNCTION types TOKEN_OPEN_PAR decl_list_init TOKEN_CLOSED_PAR end_func_decl { $$ = decl_create( $1, type_create(TYPE_FUNCTION, $4, $6, NULL), NULL, $8, NULL);}
@@ -152,7 +152,11 @@ end_declaration     : TOKEN_ASSIGN expression TOKEN_SEMICOLON { $$ = $2;  }
                     | TOKEN_SEMICOLON { $$ = NULL; }
                     ;
 
-types               : TOKEN_ARR TOKEN_OPEN_BRACE expr TOKEN_CLOSED_BRACE types { $$ = type_create(TYPE_ARRAY, $5, NULL, $3); }
+param_types         : TOKEN_ARR TOKEN_OPEN_BRACE expr TOKEN_CLOSED_BRACE param_types { $$ = type_create(TYPE_ARRAY, $5, NULL, $3); }
+                    | real_types { $$ = $1; }
+                    ;
+
+types               : TOKEN_ARR TOKEN_OPEN_BRACE expression TOKEN_CLOSED_BRACE types { $$ = type_create(TYPE_ARRAY, $5, NULL, $3); }
                     | real_types { $$ = $1;  }
                     ;
 
@@ -317,6 +321,5 @@ useful.  In practice, it often does not.
 
 int yyerror( char *str )
 {
-	printf("parse error: %s\n",str);
 	return 0;
 }

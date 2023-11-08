@@ -98,7 +98,6 @@ extern void expr_print( struct expr* e ){
     if (!e){
         return;
     }
-    //char encoded_str[MAX_STRING_LEN];
     switch (e->kind){
 
         case EXPR_ADD:
@@ -202,13 +201,11 @@ extern void expr_print( struct expr* e ){
             printf("}");
             break;
         case EXPR_LIST:
-        printf("INlist");
             expr_print(e->left);
             if(e->right){
                 printf(", ");
                 expr_print(e->right);
             }
-            printf("outlist");
             break;
         case EXPR_INDEX_LIST:
             printf("[");
@@ -221,16 +218,13 @@ extern void expr_print( struct expr* e ){
             expr_print(e->right);
             break;
         case EXPR_CALL:
-            printf("got a call\n");
             expr_print(e->left);
-            printf("IDED");
             printf("( ");
             expr_print(e->right);
-            printf("EXPRD");
-            printf(" )F");
+            printf(" )");
             break;
         case EXPR_INTEGER_LITERAL:
-            printf("%dD", e->literal_value);
+            printf("%d", e->literal_value);
             break;
         case EXPR_FLOAT_LITERAL:
             printf("%g",e->float_literal);
@@ -250,9 +244,6 @@ extern void expr_print( struct expr* e ){
             }
             break;
         case EXPR_IDENT_LITERAL:
-            if (!e->name){
-                printf("WTF\n");
-            }
             printf("%s",e->name);
             break;
         case EXPR_PAREN:

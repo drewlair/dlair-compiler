@@ -1,2 +1,7 @@
 // can't use anything but print in this form
-printf "hello world", x, y;
+foo1: function void () = {
+    return;
+}
+foo1: function void () = {
+    return;
+}

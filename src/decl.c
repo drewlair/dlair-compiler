@@ -20,7 +20,6 @@ void decl_print( struct decl *d, int indent ){
         printf("\t");
     }
 
-    printf("indecl %s: ",d->name);
     type_print( d->type );
     if( d->code ){
         printf(" = \n{\n");

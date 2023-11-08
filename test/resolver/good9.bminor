@@ -2,6 +2,7 @@
 fxn: function integer (x:integer)=
 {
 	return x++;
+	x;
 }
 
 fxn2: function char (x:integer, y:char, z:boolean)=
@@ -10,12 +11,32 @@ fxn2: function char (x:integer, y:char, z:boolean)=
 		return 'Z';
 	else
 		return 'z';
+	x;
 }
 
 fxn3: function char (x: array [] integer, y:char, z: array [] array [] boolean)=
 {
-	if(y=='z')
+	if(z=='z')
 		return 'Z';
 	else
 		return 'z';
+	x;
+}
+
+fxn4: function string (x: array [] char, y:float) = {
+	/*
+	if (y){
+		x: float = 4.0;
+	}
+	else{
+		y;
+	}
+	*/
+	x: char;
+	x;
+	return;
+}
+
+fxn5: function void () = {
+	print "hooray";
 }

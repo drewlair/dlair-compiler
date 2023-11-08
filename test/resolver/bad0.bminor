@@ -1,0 +1,9 @@
+fxn: function void (y: float) = {
+    a: float = 4.0;
+    if (a){
+        ifdecl: integer = 0;
+    }
+    
+    print ifdecl;
+    return;
+}

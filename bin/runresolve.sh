@@ -15,11 +15,11 @@ for testfile in test/resolver/bad*.bminor
 do
     if ./exec/bminor --resolve $testfile
     then
-        echo "$testfile success (INCORRECT)"
+        echo "$testfile success (FAILURE)"
     else
         counter=$((counter+1))
         echo "$testfile failure (as expected)"
     fi
 done
-echo "Passed $counter/34 Test Cases"
+echo "Passed $counter/29 Test Cases"
 

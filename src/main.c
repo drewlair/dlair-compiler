@@ -12,10 +12,10 @@ extern char* yytext;
 extern struct decl* parser_result;
 
 
-
 int main(int argc, char* argv[]){
 
     //initialize scope stack
+    resolver_result = 0;
     stack = NULL;
     scope_enter();
 
@@ -204,6 +204,8 @@ int main(int argc, char* argv[]){
         fclose(yyin);
 
         decl_resolve( parser_result );
+
+        return resolver_result;
 
     }
     else if( argc == 2 && ( strcmp( argv[1], "--test") == 0 ) ){

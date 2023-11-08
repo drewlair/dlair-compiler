@@ -11,6 +11,7 @@ void decl_resolve( struct decl* d ){
 
     if ( stack->size == 1 ){
         s = symbol_create( SYMBOL_GLOBAL, d->type, d->name );
+        printf("made global %s\n",d->name);
     }
 
     else{
@@ -24,6 +25,7 @@ void decl_resolve( struct decl* d ){
     if (d->type->kind == TYPE_FUNCTION){
         if ( stack->size > 1 ){
             printf("resolve error: function declared in local scope\n");
+            resolver_result = 1;
         }
         
         scope_enter();
@@ -90,16 +92,14 @@ void stmt_resolve( struct stmt* s ){
 }
 
 void expr_resolve( struct expr* e ){
-
     if ( !e ){
         return;
     }
-
     if ( e->kind == EXPR_IDENT_LITERAL ){
         struct symbol *s = scope_lookup( e->name );
-        
         if ( !s ){
             printf("resolve error: %s is not defined\n", e->name);
+            resolver_result = 1;
         }
         
         else if( s->kind == SYMBOL_GLOBAL ){
