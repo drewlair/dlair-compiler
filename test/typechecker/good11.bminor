@@ -1,0 +1,9 @@
+
+arr: array [2] integer = {1,2};
+ar: array [2] integer;
+main: function integer () = {
+    ar = arr;
+    return 0;
+
+
+}

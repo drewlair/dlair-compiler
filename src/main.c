@@ -249,6 +249,10 @@ int main(int argc, char* argv[]){
 
         decl_resolve( parser_result );
 
+        if (resolver_result == 1){
+            return 1;
+        }
+
         decl_typecheck( parser_result );
 
         if (typechecker_result) return 0;
