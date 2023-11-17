@@ -39,13 +39,15 @@ void scope_exit(){
 
 void scope_bind( const char *name, struct symbol* s ){
     if (hash_table_insert( stack->ht, name, s ) != 1){
-        if (s->type->kind == TYPE_FUNCTION){
-            printf("resolve error: redeclaring function %s\n",name);
-            resolver_result = 1;
-        } else{
-            hash_table_remove( stack->ht, name );
-            hash_table_insert( stack->ht, name, s);
-        }
+        
+        printf("resolve error: redeclaring ");
+        type_print(s->type);
+        printf(" %s\n", name);
+        resolver_result = 1;
+
+        hash_table_remove( stack->ht, name );
+        hash_table_insert( stack->ht, name, s);
+        
         
     }
     return;

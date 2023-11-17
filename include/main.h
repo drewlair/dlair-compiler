@@ -14,3 +14,12 @@ struct stack_node{
 
 struct stack_node* stack;
 int resolver_result;
+
+struct returnTypes{
+    struct type *type;
+    struct expr *expr;
+    struct returnTypes *next;
+}returnTypes;
+
+struct returnTypes *returnTypesHead;
+struct returnTypes *returnTypesTail;

@@ -1,0 +1,9 @@
+main: function integer () = {
+    print "correct func";
+    return 0;
+}
+arr: array [1] integer = {1};
+foo: function array [1] integer (argc: integer) = {
+    print "function returning function";
+    return arr;
+}

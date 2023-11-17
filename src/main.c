@@ -1,9 +1,9 @@
-#include "../include/main.h"
+#include "../include/typecheck.h"
 #include "../parser.h"
-#include "../include/decl.h"
 #include "../include/scope.h"
 #include "../include/hash_table.h"
 #include "../include/resolve.h"
+
 extern struct expr* expr_create(expr_t kind, struct expr *left, struct expr *right );
 extern FILE* yyin;
 extern int yyparse();
@@ -12,12 +12,16 @@ extern char* yytext;
 extern struct decl* parser_result;
 
 
+
 int main(int argc, char* argv[]){
 
-    //initialize scope stack
+    //initialize scope stack and return global
     resolver_result = 0;
     stack = NULL;
     scope_enter();
+    returnTypesHead = NULL;
+    returnTypesTail = NULL;
+    typechecker_result = 1;
 
     //encode test cases
     if ( argc == 3 && ( strcmp(argv[1],"--encode") == 0 ) ){
@@ -208,8 +212,7 @@ int main(int argc, char* argv[]){
         return resolver_result;
 
     }
-    else if( argc == 2 && ( strcmp( argv[1], "--test") == 0 ) ){
-
+    else if ( argc == 3 && strcmp( argv[1], "--typecheck") == 0){
         yyin = fopen(argv[2], "r");
 
         if ( !yyin ){
@@ -242,6 +245,59 @@ int main(int argc, char* argv[]){
                 return 1;
             }
         }
+        fclose(yyin);
+
+        decl_resolve( parser_result );
+
+        decl_typecheck( parser_result );
+
+        if (typechecker_result) return 0;
+        else return 1;
+
+    }
+
+    else if( argc == 2 && ( strcmp( argv[1], "--test") == 0 ) ){
+
+        yyin = fopen("input.bminor", "r");
+
+        if ( !yyin ){
+            printf("Error: Could not Open Test File!\n");
+            return 1;
+        }
+
+        while ( true ){
+            int t = yylex();
+            if ( t == TOKEN_EOF ) break;
+
+            //printf("token: %d  text: <%s>\n", t, yytext);
+            if( t == TOKEN_ERROR ){
+                printf("Error: Token not valid\n");
+                return 1;
+            }
+
+        }
+        rewind(yyin);
+
+
+        if (!yyin){
+            printf("file pointer error\n");
+        }
+        while (!feof(yyin)){
+
+            if (yyparse() == 1){
+                printf("Parse Error\n");
+                fclose(yyin);
+                return 1;
+            }
+        }
+
+        decl_resolve( parser_result );
+        
+        decl_typecheck( parser_result );
+        if (resolver_result == 0){
+            printf("successful typecheck\n");
+        }
+        
         fclose(yyin);
 
         

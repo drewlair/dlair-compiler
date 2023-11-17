@@ -33,8 +33,8 @@ typedef enum {
 	EXPR_STRING_LITERAL,
 	EXPR_IDENT_LITERAL,
     EXPR_LIST,
+	EXPR_PRINT_LIST,
 	EXPR_LIST_ARRAY,
-    EXPR_LIST_INIT,
 	EXPR_INDEX_LIST,
 	EXPR_INDEX,
 	EXPR_PAREN,
@@ -54,6 +54,7 @@ struct expr {
 	char char_literal;
 	const char * string_literal;
 	struct symbol *symbol;
+	
 };
 /*
 struct expr_list {

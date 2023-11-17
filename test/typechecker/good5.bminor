@@ -1,0 +1,5 @@
+arr: array [3] array [2] array [1] integer = {{{1},{2}},{{3},{4}},{{5},{6}}};
+main: function integer () = {
+    print arr[0], arr[1][0], arr[2][1][0];
+    return 0;
+}

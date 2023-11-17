@@ -7,6 +7,9 @@ FLAGS = -Wall -g
 
 all: $(EXEC)
 
+typecheck.o: include/typecheck.h src/typecheck.c
+	$(CMP) $(FLAGS) src/typecheck.c -c -o typecheck.o
+
 resolve.o: src/resolve.c include/resolve.h include/main.h include/symbol.h
 	$(CMP) $(FLAGS) src/resolve.c -c -o resolve.o
 
@@ -40,7 +43,7 @@ parser.c parser.h token_bison.h: src/parser.bison
 scanner.c: src/scanner.flex token_bison.h parser.h
 	flex -oscanner.c src/scanner.flex
 
-main.o: src/main.c include/main.h include/encoder.h parser.h
+main.o: src/main.c include/typecheck.h include/encoder.h parser.h
 	$(CMP) $(FLAGS) src/main.c -c -o main.o
 
 scanner.o: scanner.c include/token.h
@@ -52,11 +55,11 @@ parser.o: parser.c parser.h include/type.h
 encoder.o: src/encoder.c include/encoder.h
 	$(CMP) $(FLAGS) src/encoder.c -c -o encoder.o
 
-$(EXEC): $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o scope.o ht.o resolve.o symbol.o
-	$(CMP) $(FLAGS) $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o scope.o ht.o resolve.o symbol.o -o exec/$(EXEC) -lm
+$(EXEC): $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o scope.o ht.o resolve.o symbol.o typecheck.o
+	$(CMP) $(FLAGS) $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o scope.o ht.o resolve.o symbol.o typecheck.o -o exec/$(EXEC) -lm
 
-test: bin/runresolve.sh
-	./bin/runresolve.sh
+test: bin/runtypechecks.sh
+	./bin/runtypechecks.sh
 
 scan: bin/runscans.sh
 	./bin/runscans.sh
@@ -70,6 +73,10 @@ print: bin/runprints.sh
 resolve: bin/runresolve.sh 
 	./bin/runresolve.sh
 
+typecheck: bin/runtypecheck.sh 
+	./bin/typecheck.sh 
+
+
 clean:
 
 	rm *.o
@@ -78,6 +85,7 @@ clean:
 	rm parser.c
 	rm parser.output
 	rm exec/$(EXEC)
+	rm test/typechecker/*.bminor.out
 	rm test/resolver/*.bminor.out
 	rm test/printer/*.bminor.out
 	rm test/parser/*.bminor.out

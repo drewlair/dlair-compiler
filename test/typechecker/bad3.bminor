@@ -1,0 +1,6 @@
+
+main: function integer () = {
+    return 0;
+}
+id: integer = 1;
+foo: array [1] integer = {id};

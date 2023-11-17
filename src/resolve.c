@@ -7,15 +7,16 @@ void decl_resolve( struct decl* d ){
         return;
     }
     struct symbol *s;
-   
+    
 
     if ( stack->size == 1 ){
         s = symbol_create( SYMBOL_GLOBAL, d->type, d->name );
-        printf("made global %s\n",d->name);
+       
     }
 
     else{
         s = symbol_create( SYMBOL_LOCAL, d->type, d->name );
+        
         s->which = stack->localCount++;
     }
     d->symbol = s;
@@ -57,8 +58,9 @@ void stmt_resolve( struct stmt* s ){
     if ( !s ){
         return;
     }
-
+    
     if( s->kind == STMT_DECL ){
+        printf("correct\n");
         decl_resolve( s->decl );
     }
 
@@ -100,6 +102,7 @@ void expr_resolve( struct expr* e ){
         if ( !s ){
             printf("resolve error: %s is not defined\n", e->name);
             resolver_result = 1;
+        
         }
         
         else if( s->kind == SYMBOL_GLOBAL ){
@@ -111,6 +114,8 @@ void expr_resolve( struct expr* e ){
         else{
             printf("%s resolves to param %d\n",s->name,s->which);
         }
+        e->symbol = s;
+
 
     }
     else{

@@ -1,0 +1,8 @@
+foo: function integer () = {
+    return 0;
+}
+
+main: function function integer () = {
+    print "invalid func decl";
+    return foo;
+}

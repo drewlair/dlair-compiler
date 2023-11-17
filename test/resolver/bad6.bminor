@@ -3,6 +3,6 @@ x:integer = 5;
 
 main:function void()=
 {
-	x++;
-	x++
+	x: integer;
+	x: float;
 }

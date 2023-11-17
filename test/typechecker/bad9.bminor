@@ -1,0 +1,7 @@
+
+main: function integer (x: array [] float) = {
+    return 0;
+}
+
+
+arr: array [3] function integer = {main, main, main};

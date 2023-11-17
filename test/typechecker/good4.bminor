@@ -1,0 +1,21 @@
+
+foo: function void (i: integer, f: float, c: char, s: string, a: array [] boolean) = {
+    if (i < 50){
+        print "int works";
+    }
+    else if(f < 70^2){
+        print "float works";
+    }
+    ch: char = c;
+    a[1];
+    newStr: string = s;
+    return;
+}
+
+main: function integer (argc: integer) = {
+    j: integer = 1;
+    f: float = 70.0;
+    c: char = 'a';
+    str: string = "hello";
+    return argc;
+}

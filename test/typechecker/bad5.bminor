@@ -1,0 +1,22 @@
+main: function integer () = {
+
+    x: integer = 4;
+    y: float;
+    if (true){
+        return x;
+    }
+    else{
+        return y;
+    }
+    return true;
+    return "";
+
+}
+
+foo: function void () = {
+    return 1;
+    return "hello";
+    return false;
+    return;
+
+}

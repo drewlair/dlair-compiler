@@ -1,0 +1,7 @@
+
+
+main: function integer (argc: integer, argv: array [5] string) = {
+    j: integer = 5;
+    i: integer = argc = j;
+    return i;
+}

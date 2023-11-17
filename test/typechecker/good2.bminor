@@ -1,0 +1,16 @@
+//call another func
+foo: function void (y: boolean) = {
+    print "its ", y, "that this is another function";
+    return;
+}
+
+main: function integer (argc: integer, argv: string) = {
+    if (argc < 2){
+        foo(true);
+    }
+    else{
+        foo(false);
+    }
+    return argc;
+
+}

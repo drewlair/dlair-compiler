@@ -1,0 +1,5 @@
+//func args
+main: function integer (argc: integer, argv: array [] string) = {
+    print argc, argv;
+    return 1;
+}

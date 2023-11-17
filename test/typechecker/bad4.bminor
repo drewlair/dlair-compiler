@@ -1,0 +1,9 @@
+
+main: function integer () = {
+    x: integer = 4.0;
+    y: float = 3;
+    c: char = "c";
+    z: string = false;
+    g: boolean = 'h';
+    return 1;
+}

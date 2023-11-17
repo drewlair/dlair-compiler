@@ -1,0 +1,13 @@
+//many declarations
+
+j: array [3] array [2] integer = {{1,2},{3,4},{5,6}};
+
+main: function integer () = {
+    x: integer = 10000;
+    y: float = 50e10;
+    z: boolean = false;
+    g: char = 'z';
+    h: string = "hello world";
+    i: float = 10.01;
+    return x;
+}

@@ -1,0 +1,6 @@
+//invalid array call
+arr: array [2] array [1] integer = {{1}, {2}};
+main: function integer () = {
+    print arr[1][0][2];
+    return 0;
+}

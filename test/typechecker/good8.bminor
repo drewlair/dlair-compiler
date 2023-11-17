@@ -1,0 +1,15 @@
+globalI: integer = 100;
+main: function integer (argc: integer, argv: array [] string) = {
+    argv[100];
+    if (true){
+        print "if works";
+    }
+    else if(argc < globalI){
+        print "else if works";
+
+    }
+    else
+        print "else works";
+    (1);
+    return globalI;
+}

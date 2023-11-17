@@ -1,0 +1,25 @@
+funcdef: function boolean (y: float) = {
+    return true;
+}
+
+main: function integer (argc: integer, argv: array [] integer) = {
+    z: boolean = true;
+
+    if (funcdef(z)){
+        print z;
+    }
+    l: integer = 10;
+    v: float = 40;
+    if (z){
+        if (l % 2 == 0){
+            print "is even";
+        }
+        if (v % 2 == 0){
+            print "is type error";
+        }
+    }
+
+}
+
+y: integer = 5;
+z: integer = 3;

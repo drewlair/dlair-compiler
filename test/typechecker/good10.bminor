@@ -1,0 +1,8 @@
+s: string = "kendrick";
+main: function void (argv: string, play: boolean) = {
+    _favoriteArtist: string = argv;
+    if (play){
+        print "my favorite artist ", _favoriteArtist;
+    }
+    return;
+}

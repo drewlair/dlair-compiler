@@ -21,6 +21,7 @@ return               { return TOKEN_RETURN; }
 print                { return TOKEN_PRINT; }
 function             { return TOKEN_FUNCTION; }
 char                 { return TOKEN_CHAR; }
+auto                 { return TOKEN_AUTO; }
 if                   { return TOKEN_IF; }
 else                 { return TOKEN_ELSE; }
 &&                   { return TOKEN_AND; }

@@ -17,7 +17,6 @@ for use by scanner.c.
 %token TOKEN_AND
 %token TOKEN_OR
 %token TOKEN_STRING_LITERAL
-
 %token TOKEN_BOOLEAN_LITERAL
 %token TOKEN_ARR
 %token TOKEN_SEMICOLON
@@ -78,11 +77,11 @@ for use by scanner.c.
 
 };
 
-%type <expr> expression expr value unary incr n1 e1 expr_init expr_list func_expr end_declaration func_call arr_call index;
+%type <expr> expression expr value unary incr n1 e1 e2 expr_list func_expr end_declaration func_call arr_call index print_list print_list_init expr_param_list expr_param_list_init;
 %type <stmt> o_statement_list statement_list statement end_func_decl open_stmt closed_stmt non_if return_expr print_expr non_return non_stmt_list;
 %type <decl> f_decl_list f_declaration;
 %type <param_list> decl_list decl_list_init;
-%type <type> types param_types real_types TOKEN_INTEGER TOKEN_FLOAT TOKEN_BOOLEAN TOKEN_CHAR TOKEN_STRING TOKEN_AUTO TOKEN_VOID TOKEN_FUNCTION TOKEN_ARR;
+%type <type> types real_types TOKEN_INTEGER TOKEN_FLOAT TOKEN_BOOLEAN TOKEN_CHAR TOKEN_STRING TOKEN_AUTO TOKEN_VOID TOKEN_FUNCTION TOKEN_ARR;
 %type <int_val> int_val;
 %type <float_val> float_val;
 %type <str_val> str_val bool_val ident_val char_val;
@@ -136,8 +135,8 @@ decl_list_init      : decl_list { $$ = $1; } // normally list_decl decl_list
                     | { $$ = NULL; }
                     ;
 
-decl_list           : ident_val TOKEN_COLON param_types TOKEN_COMMA decl_list { $$ = param_list_create($1, $3, $5); }
-                    | ident_val TOKEN_COLON param_types { $$ = param_list_create( $1, $3, NULL); }
+decl_list           : ident_val TOKEN_COLON types TOKEN_COMMA decl_list { $$ = param_list_create($1, $3, $5); }
+                    | ident_val TOKEN_COLON types { $$ = param_list_create( $1, $3, NULL); }
                     ;
 
 f_declaration       : ident_val TOKEN_COLON TOKEN_FUNCTION types TOKEN_OPEN_PAR decl_list_init TOKEN_CLOSED_PAR end_func_decl { $$ = decl_create( $1, type_create(TYPE_FUNCTION, $4, $6, NULL), NULL, $8, NULL);}
@@ -151,12 +150,13 @@ end_func_decl       : TOKEN_ASSIGN TOKEN_OPEN_BRACK statement_list TOKEN_CLOSED_
 end_declaration     : TOKEN_ASSIGN expression TOKEN_SEMICOLON { $$ = $2;  }
                     | TOKEN_SEMICOLON { $$ = NULL; }
                     ;
-
+/*
 param_types         : TOKEN_ARR TOKEN_OPEN_BRACE expr TOKEN_CLOSED_BRACE param_types { $$ = type_create(TYPE_ARRAY, $5, NULL, $3); }
                     | real_types { $$ = $1; }
                     ;
-
-types               : TOKEN_ARR TOKEN_OPEN_BRACE expression TOKEN_CLOSED_BRACE types { $$ = type_create(TYPE_ARRAY, $5, NULL, $3); }
+*/
+types               : TOKEN_ARR TOKEN_OPEN_BRACE expr TOKEN_CLOSED_BRACE types { $$ = type_create(TYPE_ARRAY, $5, NULL, $3); }
+                    | TOKEN_FUNCTION types { $$ = type_create(TYPE_FUNCTION, $2, NULL, NULL); }
                     | real_types { $$ = $1;  }
                     ;
 
@@ -195,7 +195,15 @@ non_return          : print_expr TOKEN_SEMICOLON { $$ = $1; }
                     | expression TOKEN_SEMICOLON { $$ = stmt_create( STMT_EXPR, NULL, $1, NULL, NULL, NULL, NULL, NULL);} // changed line
                     ;
 
-print_expr          : TOKEN_PRINT expr_init { $$ = stmt_create( STMT_PRINT, NULL, $2, NULL, NULL, NULL, NULL, NULL ); }
+print_expr          : TOKEN_PRINT print_list_init { $$ = stmt_create( STMT_PRINT, NULL, $2, NULL, NULL, NULL, NULL, NULL ); } // normally expr_init
+                    ;
+
+print_list_init     : print_list { $$ = $1; }
+                    | { $$ = NULL; }
+                    ;
+
+print_list          : expression TOKEN_COMMA print_list { $$ = expr_create( EXPR_PRINT_LIST, $1, $3 ); }
+                    | expression { $$ = expr_create( EXPR_PRINT_LIST, $1, NULL );}
                     ;
 
 return_expr         : TOKEN_RETURN expr TOKEN_SEMICOLON { $$ = stmt_create( STMT_RETURN, NULL, $2, NULL, NULL, NULL, NULL, NULL ); }
@@ -216,11 +224,11 @@ closed_stmt         : non_if { $$ = $1; }
                     | TOKEN_IF TOKEN_OPEN_PAR expression TOKEN_CLOSED_PAR closed_stmt TOKEN_ELSE closed_stmt { $$ = stmt_create( STMT_IF_ELSE, NULL, $3, NULL, NULL, $5, $7, NULL ); }
                     | TOKEN_FOR TOKEN_OPEN_PAR expr TOKEN_SEMICOLON expr TOKEN_SEMICOLON expr TOKEN_CLOSED_PAR closed_stmt { $$ = stmt_create( STMT_FOR, NULL, $3, $5, $7, $9, NULL, NULL ); }
                     ;
-
+/*
 expr_init           : expr_list { $$ = $1; }
                     | { $$ = NULL; }
                     ;
-
+*/
 expr_list           : expression TOKEN_COMMA expr_list { $$ = expr_create(EXPR_LIST, $1, $3); }
                     | expression { $$ = expr_create( EXPR_LIST, $1, NULL); }
                     ;
@@ -232,8 +240,14 @@ expr                : expression { $$ = $1; }
 
 
 expression          : expression TOKEN_ASSIGN e1 { $$ = expr_create( EXPR_ASSIGN, $1, $3 ); }
+                    | e2 { $$ = $1; }
+                    ;
+
+e2                  : e2 TOKEN_OR e1 { $$ = expr_create( EXPR_OR, $1, $3); }
+                    | e2 TOKEN_AND e1 { $$ = expr_create( EXPR_OR, $1, $3); }
                     | e1 { $$ = $1; }
                     ;
+
 
 
 e1                  : e1 TOKEN_ADD n1 { $$ = expr_create( EXPR_ADD, $1, $3 ); }
@@ -244,13 +258,11 @@ e1                  : e1 TOKEN_ADD n1 { $$ = expr_create( EXPR_ADD, $1, $3 ); }
                     | e1 TOKEN_LE n1 { $$ = expr_create( EXPR_LE, $1, $3 ); }
                     | e1 TOKEN_GT n1 { $$ = expr_create( EXPR_GT, $1, $3 ); }
                     | e1 TOKEN_LT n1 { $$ = expr_create( EXPR_LT, $1, $3 ); }
-                    | e1 TOKEN_OR n1 { $$ = expr_create( EXPR_OR, $1, $3 ); }
                     | n1             { $$ = $1; }
                     ;
 
 n1                  : n1 TOKEN_MULT unary {  $$ = expr_create( EXPR_MUL, $1, $3 ); }
                     | n1 TOKEN_DIV  unary {  $$ = expr_create( EXPR_DIV, $1, $3 ); }
-                    | n1 TOKEN_AND  unary {  $$ = expr_create( EXPR_AND, $1, $3 ); }
                     | n1 TOKEN_EXP  unary {  $$ = expr_create( EXPR_EXP, $1, $3 ); }
                     | n1 TOKEN_MOD  unary {  $$ = expr_create( EXPR_MOD, $1, $3 ); }
                     | unary               {  $$ = $1; }
@@ -273,7 +285,7 @@ value               : int_val {  $$ = expr_create_integer_literal($1); }
                     | char_val { $$ = expr_create_char_literal($1[1]); }
                     | str_val { $$ = expr_create_string_literal($1); }
                     | bool_val { $$ = expr_create_boolean_literal($1);}
-                    | TOKEN_OPEN_PAR expr_init TOKEN_CLOSED_PAR { $$ = expr_create( EXPR_PAREN, $2, NULL); }
+                    | TOKEN_OPEN_PAR expression TOKEN_CLOSED_PAR { $$ = expr_create( EXPR_PAREN, $2, NULL); }
                     | TOKEN_OPEN_BRACK expr_list TOKEN_CLOSED_BRACK { $$ = expr_create( EXPR_LIST_ARRAY, $2, NULL ); }
                     ;
 
@@ -297,8 +309,17 @@ func_expr           : ident_val { $$ = expr_create_name( $1, EXPR_IDENT_LITERAL 
                     | arr_call  { $$ = $1; }
                     ;
 
-func_call           : ident_val TOKEN_OPEN_PAR expr_init TOKEN_CLOSED_PAR { $$ = expr_create( EXPR_CALL, expr_create_name( $1, EXPR_IDENT_LITERAL ), $3); }
+func_call           : ident_val TOKEN_OPEN_PAR expr_param_list_init TOKEN_CLOSED_PAR { $$ = expr_create( EXPR_CALL, expr_create_name( $1, EXPR_IDENT_LITERAL ), $3); }
                     ;
+
+expr_param_list_init: expr_param_list { $$ = $1;}
+                    | { $$ = NULL;}
+                    ;
+
+expr_param_list     : expression TOKEN_COMMA expr_param_list { $$ = expr_create( EXPR_LIST, $1, $3);}
+                    | expression { $$ = expr_create(EXPR_LIST, $1, NULL); }
+                    ;
+
 
 arr_call            : ident_val index { $$ = expr_create( EXPR_INDEX, expr_create_name( $1, EXPR_IDENT_LITERAL ), $2 ); }
                     ;

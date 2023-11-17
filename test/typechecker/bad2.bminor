@@ -1,0 +1,8 @@
+foo: function integer () = {
+    return 0;
+}
+
+main: function integer (foo: function integer) = {
+    print "should not use a func for param";
+    return foo();
+}

@@ -11,7 +11,6 @@ struct param_list * param_list_create( const char *name, struct type *type, stru
 }
 
 void param_list_print( struct param_list *p ){
-
     if (!p){
         return;
     }

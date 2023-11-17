@@ -1,0 +1,10 @@
+foo: function float (x: string) = {
+    print x;
+    return 10.0;
+}
+
+main: function integer (argc: integer, argv: array [] string) = {
+    
+    fl: float = argc^-1 * foo(argv[0]);
+    return argc;
+}
