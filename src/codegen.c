@@ -369,6 +369,18 @@ void expr_codegen( struct expr *e ){
             printf("\tmovq %%rax, %s\n", scratch_name(e->left->reg));
             scratch_free(e->right->reg);
             break;
+
+        case EXPR_MOD:
+            expr_codegen(e->left);
+            expr_codegen(e->right);
+            printf("\tmovq %s, %%rax\n",scratch_name(e->left->reg));
+            printf("cqo\n");
+            printf("\tidivq %s\n", scratch_name(e->right->reg));
+            printf("\tmovq %%rdx, %s\n", scratch_name(e->left->reg));
+            e->reg = e->left->reg;
+            scratch_free(e->right->reg);
+
+            break;
         
         case EXPR_NEGATE:
             expr_codegen(e->left);

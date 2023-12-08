@@ -56,7 +56,7 @@ else                 { return TOKEN_ELSE; }
 [0-9]{0,19}((\.[0-9]+([eE]-?([0-9]|1[01]))?)|([eE]-?([0-9]|1[01])))  { return TOKEN_FLOAT_LITERAL; }
 [a-zA-Z_][a-zA-Z0-9_]* { return TOKEN_IDENT; }
 [0-9]{1,19}            { return TOKEN_INTEGER_LITERAL; }
-\'([a-zA-Z0-9]|\\.|(\ |\n|\t))\'    { return TOKEN_CHAR_LITERAL; }
+\'([a-zA-Z0-9]|(\\.)|(\ |\n|\t)|\/)\'    { return TOKEN_CHAR_LITERAL; }
 \"([^\"\\\n]+\\.|[^\"\n])*\"      { return TOKEN_STRING_LITERAL; }
 <<EOF>>              { return TOKEN_EOF; }
 .                  { return TOKEN_ERROR; }

@@ -1,0 +1,8 @@
+
+main: function integer () = {
+    s: string = "hello";
+    print s, "\n";
+    s2: string = s;
+    print s2, "\n";
+    return 10;
+}
