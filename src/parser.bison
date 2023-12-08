@@ -292,7 +292,7 @@ value               : int_val {  $$ = expr_create_integer_literal($1); }
 int_val             : TOKEN_INTEGER_LITERAL { $$ = atoi(yytext); }
                     ;
 
-float_val           : TOKEN_FLOAT_LITERAL   { $$ = atof(yytext); }
+float_val           : TOKEN_FLOAT_LITERAL   { $$ = strtod(yytext, NULL); }
                     ;
 
 bool_val            : TOKEN_BOOLEAN_LITERAL { $$ = yytext; }

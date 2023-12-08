@@ -51,7 +51,7 @@ extern struct expr* expr_create_boolean_literal( const char* str ){
 
 }
 
-extern struct expr* expr_create_float_literal( float f ){
+extern struct expr* expr_create_float_literal( double f ){
     struct expr *e = malloc(sizeof(struct expr));
 
     e->left = NULL;

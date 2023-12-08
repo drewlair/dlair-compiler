@@ -57,3 +57,7 @@ long integer_power( long x, long y )
 	return result;
 }
 
+void print_float(double y) {
+    printf("%lf", y);
+}
+

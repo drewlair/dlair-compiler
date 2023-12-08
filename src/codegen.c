@@ -18,7 +18,7 @@ int decl_codegen( struct decl* d ){
         printf("\n");
         return codegen_result;
     }
-
+    struct type *t;
     if (d->symbol->type->kind == TYPE_FUNCTION){
         
         if (!d->code){
@@ -81,8 +81,14 @@ int decl_codegen( struct decl* d ){
             
             if (d->value){
                 expr_codegen(d->value);
-                printf("\tmovq %s, %d(%%rbp)\n", scratch_name(d->value->reg), (numParams->num + d->symbol->which) * -8);
-                scratch_free(d->value->reg);
+                t = expr_typecheck(d->value);
+                if (t->kind == TYPE_FLOAT){
+                    printf("\tmovsd %s, %d(%%rbp)\n", float_name(d->value->reg), (numParams->num + d->symbol->which) * -8);
+                    float_free(d->value->reg);
+                }else{
+                    printf("\tmovq %s, %d(%%rbp)\n", scratch_name(d->value->reg), (numParams->num + d->symbol->which) * -8);
+                    scratch_free(d->value->reg);
+                }
             }
             
             
@@ -102,9 +108,13 @@ int decl_codegen( struct decl* d ){
             }
 
             printf("\n");
+        } else if (d->symbol->type->kind == TYPE_FLOAT){
+            if (d->value) printf("\t.double %lf\n", d->value->float_literal);
+            else printf("\t.double 0.0\n");
         }
         else{
-            printf("\t.quad %d\n", d->value->literal_value);
+            if (d->value) printf("\t.quad %d\n", d->value->literal_value);
+            else printf("\t.quad 0\n");
         }
         printf(".text\n");
 
@@ -274,6 +284,18 @@ void expr_codegen( struct expr *e ){
             printf("\tmovq $%d, %s\n", e->literal_value, scratch_name(e->reg));
             break;
 
+        case EXPR_FLOAT_LITERAL:
+            printf(".data\n");
+            const char *flabel = float_label();
+            printf(".%s:\n", flabel);
+            printf("\t.double %lf\n", e->float_literal);
+            printf(".text\n");
+            e->reg = float_allocate();
+            printf("\tmovsd .%s, %s\n", flabel, float_name(e->reg));
+            break;
+
+
+
         case EXPR_CHAR_LITERAL:
             e->reg = scratch_alloc();
             if (e->reg == -1){
@@ -306,10 +328,16 @@ void expr_codegen( struct expr *e ){
         
         case EXPR_IDENT_LITERAL:
             
-            e->reg = scratch_alloc();
+            
             if (e->symbol->type->kind == TYPE_STRING && e->symbol->kind == SYMBOL_GLOBAL){
+                e->reg = scratch_alloc();
                 printf("\tleaq %s, %s\n", symbol_codegen(e->symbol), scratch_name(e->reg));
-            }else{
+            }else if (e->symbol->type->kind == TYPE_FLOAT){
+                e->reg = float_allocate();
+                printf("\tmovsd %s, %s\n",symbol_codegen(e->symbol), float_name(e->reg) );
+            }
+            else{
+                e->reg = scratch_alloc();
                 printf("\tmovq %s, %s\n", symbol_codegen(e->symbol), scratch_name(e->reg));
             }
             break;
@@ -317,7 +345,14 @@ void expr_codegen( struct expr *e ){
         case EXPR_ADD:
             expr_codegen(e->left);
             expr_codegen(e->right);
-            printf("\taddq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("\taddsd %s, %s\n", float_name(e->right->reg), float_name(e->left->reg));
+                float_free(e->right->reg);
+            } else{
+                printf("\taddq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+                scratch_free(e->right->reg);
+            }
             e->reg = e->left->reg;
             scratch_free(e->right->reg);
             break;
@@ -325,34 +360,54 @@ void expr_codegen( struct expr *e ){
         case EXPR_SUB:
             expr_codegen(e->left);
             expr_codegen(e->right);
-            printf("\tsubq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("\tsubsd %s, %s\n", float_name(e->right->reg), float_name(e->left->reg));
+                float_free(e->right->reg);
+            }else{
+                printf("\tsubq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+                scratch_free(e->right->reg);
+            }
             e->reg = e->left->reg;
-            scratch_free(e->right->reg);
+            
             break;
 
         case EXPR_MUL:
             expr_codegen(e->left);
             expr_codegen(e->right);
-            e->reg = scratch_alloc();
-            printf("\tmovq %%rax, %s\n", scratch_name( e->reg ));
-            printf("\tmovq %s, %%rax\n", scratch_name( e->left->reg ));
-            printf("\timulq %s\n", scratch_name( e->right->reg ));
-            printf("\tmovq %%rax, %s\n", scratch_name(e->left->reg));
-            printf("\tmovq %s, %%rax\n", scratch_name( e->reg ));
-            scratch_free(e->right->reg);
-            scratch_free(e->reg);
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("\tmulsd %s, %s\n", float_name(e->right->reg), float_name(e->left->reg));
+                float_free(e->right->reg);
+            }else{
+                e->reg = scratch_alloc();
+                printf("\tmovq %%rax, %s\n", scratch_name( e->reg ));
+                printf("\tmovq %s, %%rax\n", scratch_name( e->left->reg ));
+                printf("\timulq %s\n", scratch_name( e->right->reg ));
+                printf("\tmovq %%rax, %s\n", scratch_name(e->left->reg));
+                printf("\tmovq %s, %%rax\n", scratch_name( e->reg ));
+                scratch_free(e->right->reg);
+                scratch_free(e->reg);
+            }
             e->reg = e->left->reg;
             break;
 
         case EXPR_DIV:
             expr_codegen(e->left);
             expr_codegen(e->right);
-            printf("\tmovq %s, %%rax\n", scratch_name(e->left->reg));
-            printf("\tcqo\n");
-            printf("\tidivq %s\n", scratch_name(e->right->reg));
-            e->reg = e->left->reg;
-            printf("\tmovq %%rax, %s\n", scratch_name(e->reg));
-            scratch_free(e->right->reg);
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("divsd %s, %s\n", float_name(e->right->reg), float_name(e->left->reg));
+                float_free(e->right->reg);
+                e->reg = e->left->reg;
+            }else{
+                printf("\tmovq %s, %%rax\n", scratch_name(e->left->reg));
+                printf("\tcqo\n");
+                printf("\tidivq %s\n", scratch_name(e->right->reg));
+                e->reg = e->left->reg;
+                printf("\tmovq %%rax, %s\n", scratch_name(e->reg));
+                scratch_free(e->right->reg);
+            }
             break;
 
         case EXPR_EXP:
@@ -410,83 +465,111 @@ void expr_codegen( struct expr *e ){
             break;
         
         case EXPR_EE:
-            //some nice code worth explaining
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("\tCMPEQSD %s, %s\n", float_name(e->left->reg), float_name(e->right->reg));
+                e->reg = scratch_alloc();
+                printf("\tcvtss2sd %s, %s\n", float_name(e->left->reg), scratch_name(e->reg));
+                float_free(e->left->reg);
+                float_free(e->right->reg);
+            }else{
+                //some nice code worth explaining
 
-            //get the code for both expr's
-            expr_codegen(e->left);
-            expr_codegen(e->right);
+                //get the code for both expr's
+                expr_codegen(e->left);
+                expr_codegen(e->right);
+                
+                //compare both expr's so that the eflags register is set
+                printf("\tcmp %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+
+                //get rid of the right reg since it's not needed anymore
+                scratch_free(e->right->reg);
+
+                //allocate another reg for the eventual result;
+                e->reg = scratch_alloc();
+
+                //move the value 0x0040 into the reg, bitmap will keep the 6th bit of any value with an and instr
+                printf("\tmovq $64, %s\n", scratch_name(e->reg));
+
+                //grab the eflags reg and put into the left reg by pushing and popping
+                printf("\tpushf\n");
+                printf("\tpop %s\n",scratch_name(e->left->reg));
+
+                //do the and to get the value of the EE
+                printf("\tand %s, %s\n", scratch_name(e->left->reg), scratch_name(e->reg));
+
+                //shift that value to the 0 bit so that the return is a boolean
+                printf("\tshrd $6, %s, %s\n", scratch_name(e->reg), scratch_name(e->reg));
             
-            //compare both expr's so that the eflags register is set
-            printf("\tcmp %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
 
-            //get rid of the right reg since it's not needed anymore
-            scratch_free(e->right->reg);
-
-            //allocate another reg for the eventual result;
-            e->reg = scratch_alloc();
-
-            //move the value 0x0040 into the reg, bitmap will keep the 6th bit of any value with an and instr
-            printf("\tmovq $64, %s\n", scratch_name(e->reg));
-
-            //grab the eflags reg and put into the left reg by pushing and popping
-            printf("\tpushf\n");
-            printf("\tpop %s\n",scratch_name(e->left->reg));
-
-            //do the and to get the value of the EE
-            printf("\tand %s, %s\n", scratch_name(e->left->reg), scratch_name(e->reg));
-
-            //shift that value to the 0 bit so that the return is a boolean
-            printf("\tshrd $6, %s, %s\n", scratch_name(e->reg), scratch_name(e->reg));
-
-            //free the left reg so that only e->reg with the bool is left
-            scratch_free(e->left->reg);
+                //free the left reg so that only e->reg with the bool is left
+                scratch_free(e->left->reg);
+            }
             break;
 
         case EXPR_NE:
             //some nice code worth explaining
 
-            //get the code for both expr's
+                //get the code for both expr's
             expr_codegen(e->left);
             expr_codegen(e->right);
-            
-            //compare both expr's so that the eflags register is set
-            printf("\tcmp %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("\tCMPNEQSD %s, %s\n", float_name(e->left->reg), float_name(e->right->reg));
+                e->reg = scratch_alloc();
+                printf("\tcvtss2sd %s, %s\n", float_name(e->left->reg), scratch_name(e->reg));
+                float_free(e->left->reg);
+                float_free(e->right->reg);
+            }else{
+                
+                //compare both expr's so that the eflags register is set
+                printf("\tcmp %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
 
-            //get rid of the right reg since it's not needed anymore
-            scratch_free(e->right->reg);
+                //get rid of the right reg since it's not needed anymore
+                scratch_free(e->right->reg);
 
-            //allocate another reg for the eventual result;
-            e->reg = scratch_alloc();
+                //allocate another reg for the eventual result;
+                e->reg = scratch_alloc();
 
-            //move the value 0x0040 into the reg, bitmap will keep the 6th bit of any value with an and instr
-            printf("\tmovq $64, %s\n", scratch_name(e->reg));
+                //move the value 0x0040 into the reg, bitmap will keep the 6th bit of any value with an and instr
+                printf("\tmovq $64, %s\n", scratch_name(e->reg));
 
-            //grab the eflags reg and put into the left reg by pushing and popping
-            printf("\tpushf\n");
-            printf("\tpop %s\n",scratch_name(e->left->reg));
+                //grab the eflags reg and put into the left reg by pushing and popping
+                printf("\tpushf\n");
+                printf("\tpop %s\n",scratch_name(e->left->reg));
 
-            //do the and to get the value of the EE
-            printf("\tand %s, %s\n", scratch_name(e->left->reg), scratch_name(e->reg));
+                //do the and to get the value of the EE
+                printf("\tand %s, %s\n", scratch_name(e->left->reg), scratch_name(e->reg));
 
-            //shift that value to the 0 bit so that the return is a boolean
-            printf("\tshrd $6, %s, %s\n", scratch_name(e->reg), scratch_name(e->reg));
+                //shift that value to the 0 bit so that the return is a boolean
+                printf("\tshrd $6, %s, %s\n", scratch_name(e->reg), scratch_name(e->reg));
 
-            //since not equal, need to convert to the opposite of itself
-            printf("\txor $1, %s\n", scratch_name(e->reg));
+                //since not equal, need to convert to the opposite of itself
+                printf("\txor $1, %s\n", scratch_name(e->reg));
 
-            //free the left reg so that only e->reg with the bool is left
-            scratch_free(e->left->reg);
+                //free the left reg so that only e->reg with the bool is left
+                scratch_free(e->left->reg);
+            }
             break;
 
         case EXPR_LE:
 
             expr_codegen(e->left);
             expr_codegen(e->right);
-            printf("\tsubq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
-            scratch_free(e->right->reg);
-            printf("\tsubq $1, %s\n", scratch_name(e->left->reg));
-            printf("\tshr $63, %s\n", scratch_name(e->left->reg));
-            e->reg = e->left->reg;
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("\tCMPLESD %s, %s\n", float_name(e->left->reg), float_name(e->right->reg));
+                e->reg = scratch_alloc();
+                printf("\tcvtss2sd %s, %s\n", float_name(e->left->reg), scratch_name(e->reg));
+                float_free(e->left->reg);
+                float_free(e->right->reg);
+            }else{
+                printf("\tsubq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+                scratch_free(e->right->reg);
+                printf("\tsubq $1, %s\n", scratch_name(e->left->reg));
+                printf("\tshr $63, %s\n", scratch_name(e->left->reg));
+                e->reg = e->left->reg;
+            }
             break;
         
         case EXPR_GE:
@@ -494,37 +577,65 @@ void expr_codegen( struct expr *e ){
 
             expr_codegen(e->left);
             expr_codegen(e->right);
-            printf("\tsubq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
-            scratch_free(e->left->reg);
-            printf("\tsubq $1, %s\n", scratch_name(e->right->reg));
-            printf("\tshr $63, %s\n", scratch_name(e->right->reg));
-            e->reg = e->right->reg;
-
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("\tCMPGESD %s, %s\n", float_name(e->left->reg), float_name(e->right->reg));
+                e->reg = scratch_alloc();
+                printf("\tcvtss2sd %s, %s\n", float_name(e->left->reg), scratch_name(e->reg));
+                float_free(e->left->reg);
+                float_free(e->right->reg);
+            }else{
+                printf("\tsubq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+                scratch_free(e->left->reg);
+                printf("\tsubq $1, %s\n", scratch_name(e->right->reg));
+                printf("\tshr $63, %s\n", scratch_name(e->right->reg));
+                e->reg = e->right->reg;
+            }
             break;
         
         case EXPR_LT:
             expr_codegen(e->left);
             expr_codegen(e->right);
-            printf("\tsubq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
-            scratch_free(e->right->reg);
-            printf("\tshr $63, %s\n", scratch_name(e->left->reg));
-            e->reg = e->left->reg;
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("\tCMPLTSD %s, %s\n", float_name(e->left->reg), float_name(e->right->reg));
+                e->reg = scratch_alloc();
+                printf("\tcvtss2sd %s, %s\n", float_name(e->left->reg), scratch_name(e->reg));
+                float_free(e->left->reg);
+                float_free(e->right->reg);
+            }else{
+                printf("\tsubq %s, %s\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+                scratch_free(e->right->reg);
+                printf("\tshr $63, %s\n", scratch_name(e->left->reg));
+                e->reg = e->left->reg;
+            }
 
             break;
         
         case EXPR_GT:
             expr_codegen(e->left);
             expr_codegen(e->right);
-            printf("\tsubq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
-            scratch_free(e->left->reg);
-            printf("\tshr $63, %s\n", scratch_name(e->right->reg));
-            e->reg = e->right->reg;
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("\tCMPEQSD %s, %s\n", float_name(e->left->reg), float_name(e->right->reg));
+                e->reg = scratch_alloc();
+                printf("\tcvtss2sd %s, %s\n", float_name(e->left->reg), scratch_name(e->reg));
+                float_free(e->left->reg);
+                float_free(e->right->reg);
+            }else{
+                printf("\tsubq %s, %s\n", scratch_name(e->left->reg), scratch_name(e->right->reg));
+                scratch_free(e->left->reg);
+                printf("\tshr $63, %s\n", scratch_name(e->right->reg));
+                e->reg = e->right->reg;
+            }
 
             break;
 
         case EXPR_NOT:
             expr_codegen(e->left);
-            printf("\txor $1, %s\n", scratch_name(e->left->reg));
+            t =expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT) printf("\txor $1, %s\n", float_name(e->left->reg));
+            else printf("\txor $1, %s\n", scratch_name(e->left->reg));
             e->reg = e->left->reg;
 
             break;
@@ -532,18 +643,26 @@ void expr_codegen( struct expr *e ){
         case EXPR_ASSIGN:
             expr_codegen(e->right);
             expr_codegen(e->left);
-            printf("\tmovq %s, %s\n", scratch_name(e->right->reg), symbol_codegen(e->left->symbol));
-            scratch_free(e->right->reg);
+            t = expr_typecheck(e->left);
+            if (t->kind == TYPE_FLOAT){
+                printf("\tmovsd %s, %s\n", float_name(e->right->reg), symbol_codegen(e->left->symbol));
+                float_free(e->right->reg);
+            }else{
+                printf("\tmovq %s, %s\n", scratch_name(e->right->reg), symbol_codegen(e->left->symbol));
+                scratch_free(e->right->reg);
+            }
             e->reg = e->left->reg;
             break;
 
         case EXPR_INCR:
             expr_codegen(e->left);
+            
             printf("\tincq %s\n", scratch_name(e->left->reg));
             if (e->left && e->left->kind == EXPR_IDENT_LITERAL){
                 printf("\tmovq %s, %s\n", scratch_name(e->left->reg), symbol_codegen(e->left->symbol));
             }
             e->reg = e->left->reg;
+            
 
             break;
         case EXPR_DECR:
@@ -567,27 +686,43 @@ void expr_codegen( struct expr *e ){
             expr_codegen(e->left);
             printf("\tpushq %%r10\n");
             printf("\tpushq %%r11\n");
-            printf("\tmovq %s, %%rdi\n", scratch_name(e->left->reg));
             t = expr_typecheck(e->left);
             
             if (t->kind == TYPE_INTEGER){
+                printf("\tmovq %s, %%rdi\n", scratch_name(e->left->reg));
                 printf("\tcall print_integer\n");
+                scratch_free(e->left->reg);
             }
             else if (t->kind == TYPE_CHARACTER){
+                printf("\tmovq %s, %%rdi\n", scratch_name(e->left->reg));
                 printf("\tcall print_character\n");
+                scratch_free(e->left->reg);
             }
             else if (t->kind == TYPE_STRING){
+                printf("\tmovq %s, %%rdi\n", scratch_name(e->left->reg));
                 printf("\tcall print_string\n");
+                scratch_free(e->left->reg);
             }
             else if (t->kind == TYPE_BOOLEAN){
+                printf("\tmovq %s, %%rdi\n", scratch_name(e->left->reg));
                 printf("\tcall print_boolean\n");
+                scratch_free(e->left->reg);
             }
             else if (t->kind == TYPE_STRING){
+                printf("\tmovq %s, %%rdi\n", scratch_name(e->left->reg));
                 printf("\tcall print_string\n");
+                scratch_free(e->left->reg);
+            } else if(t->kind == TYPE_FLOAT){
+                
+                printf("\tmovsd %s, %%xmm0\n", symbol_codegen(e->left->symbol));
+                printf("\tmovq $1, %%rax\n");
+                printf("\tcall print_float\n");
+                
+                float_free(e->left->reg);
             }
             printf("\tpopq %%r11\n");
             printf("\tpopq %%r10\n");
-            scratch_free(e->left->reg);
+            
             expr_codegen(e->right);
             break;
 

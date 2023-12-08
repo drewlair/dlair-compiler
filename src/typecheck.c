@@ -342,7 +342,7 @@ struct type* expr_typecheck( struct expr *e ){
                 error_print(e->left,e->right, "^");
                 typechecker_result = 0;
             }
-            return type_create(left->kind, NULL, NULL, NULL);;
+            return type_create(TYPE_FLOAT, NULL, NULL, NULL);;
             break;
         case EXPR_ASSIGN:
             left = expr_typecheck(e->left);

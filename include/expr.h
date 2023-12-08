@@ -52,7 +52,7 @@ struct expr {
 	const char *name;
 	int literal_value;
 	int reg;
-	float float_literal;
+	double float_literal;
 	const char * string_literal;
 	struct symbol *symbol;
 	
@@ -67,7 +67,7 @@ extern struct expr * expr_create( expr_t kind, struct expr *left, struct expr *r
 extern struct expr * expr_create_name( const char *n, expr_t kind);
 extern struct expr * expr_create_integer_literal( int c );
 extern struct expr * expr_create_boolean_literal( const char *str );
-extern struct expr * expr_create_float_literal( float f );
+extern struct expr * expr_create_float_literal( double f );
 extern struct expr * expr_create_char_literal( const char *c );
 extern struct expr * expr_create_string_literal( const char *str );
 
