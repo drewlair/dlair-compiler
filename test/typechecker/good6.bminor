@@ -4,7 +4,7 @@ foo: function float (x: string) = {
 }
 
 main: function integer (argc: integer, argv: array [] string) = {
-    
-    fl: float = argc^-1 * foo(argv[0]);
+    f:float = 50.0;
+    fl: float = f^1.0 * foo(argv[0]);
     return argc;
 }

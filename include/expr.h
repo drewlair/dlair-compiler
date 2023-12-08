@@ -36,6 +36,7 @@ typedef enum {
 	EXPR_PRINT_LIST,
 	EXPR_LIST_ARRAY,
 	EXPR_INDEX_LIST,
+	EXPR_PARAM_LIST,
 	EXPR_INDEX,
 	EXPR_PAREN,
 	EXPR_CALL,
@@ -50,8 +51,8 @@ struct expr {
 	/* used by various leaf exprs */
 	const char *name;
 	int literal_value;
+	int reg;
 	float float_literal;
-	char char_literal;
 	const char * string_literal;
 	struct symbol *symbol;
 	
@@ -67,8 +68,9 @@ extern struct expr * expr_create_name( const char *n, expr_t kind);
 extern struct expr * expr_create_integer_literal( int c );
 extern struct expr * expr_create_boolean_literal( const char *str );
 extern struct expr * expr_create_float_literal( float f );
-extern struct expr * expr_create_char_literal( char c );
+extern struct expr * expr_create_char_literal( const char *c );
 extern struct expr * expr_create_string_literal( const char *str );
+
 
 
 extern void expr_print( struct expr *e );

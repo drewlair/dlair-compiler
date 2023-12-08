@@ -3,6 +3,7 @@
 
 
 void decl_resolve( struct decl* d ){
+    
     if (!d){
         return;
     }
@@ -16,11 +17,14 @@ void decl_resolve( struct decl* d ){
 
     else{
         s = symbol_create( SYMBOL_LOCAL, d->type, d->name );
-        
-        s->which = stack->localCount++;
+        stack->localCount++;
+        s->which = stack->localCount;
     }
     d->symbol = s;
-    scope_bind( d->name, s );
+    scope_bind( d->name, d->symbol );
+    
+    s = scope_lookup(d->name);
+    
     
 
     if (d->type->kind == TYPE_FUNCTION){
@@ -28,10 +32,12 @@ void decl_resolve( struct decl* d ){
             printf("resolve error: function declared in local scope\n");
             resolver_result = 1;
         }
-        
         scope_enter();
+        
         param_list_resolve( d->type->params, 1 );
         stmt_resolve( d->code );
+        if (d->code) d->code->numLocals = stack->localCount;
+        
         scope_exit();
             
     }
@@ -60,7 +66,6 @@ void stmt_resolve( struct stmt* s ){
     }
     
     if( s->kind == STMT_DECL ){
-        printf("correct\n");
         decl_resolve( s->decl );
     }
 
@@ -70,6 +75,7 @@ void stmt_resolve( struct stmt* s ){
         expr_resolve( s->expr       );
         expr_resolve( s->next_expr  );
         stmt_resolve( s->body       );
+        s->numLocals = stack->localCount;
         scope_exit();
     }
 
@@ -78,27 +84,33 @@ void stmt_resolve( struct stmt* s ){
 
         scope_enter();
         stmt_resolve( s->body );
+        s->body->numLocals = stack->localCount;
         scope_exit();
 
         scope_enter();
         stmt_resolve( s->else_body );
+        if (s->else_body) s->else_body->numLocals = stack->localCount;
         scope_exit();
     }
 
     else{
+        
         expr_resolve( s->init_expr );
     }
-
+    
     stmt_resolve( s->next );
 
 }
 
 void expr_resolve( struct expr* e ){
+   
     if ( !e ){
         return;
     }
     if ( e->kind == EXPR_IDENT_LITERAL ){
+        
         struct symbol *s = scope_lookup( e->name );
+        /*
         if ( !s ){
             printf("resolve error: %s is not defined\n", e->name);
             resolver_result = 1;
@@ -114,10 +126,11 @@ void expr_resolve( struct expr* e ){
         else{
             printf("%s resolves to param %d\n",s->name,s->which);
         }
+        */
         e->symbol = s;
+        
 
-
-    }
+    } 
     else{
         expr_resolve( e->left );
         expr_resolve( e->right );

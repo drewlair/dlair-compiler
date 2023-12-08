@@ -1,0 +1,4 @@
+x: function integer(a:char);
+x: function integer(a:integer) = {
+	return 0;
+}

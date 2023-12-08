@@ -17,10 +17,11 @@ struct type* decl_typecheck( struct decl *d ){
         }
         
         param_list_type_check(d->symbol->type->params);
+
         stmt_typecheck(d->code);
         struct returnTypes *curr = returnTypesHead;
         while (curr){
-            if (!type_compare(curr->type, d->symbol->type->subtype)){
+            if (!type_compare(curr->type, d->symbol->type->subtype) && d->symbol->type->subtype->kind != TYPE_VOID){
                 printf("type error: return type of ");
                 type_print(curr->type);
                 printf(" of expression ");
@@ -47,13 +48,15 @@ struct type* decl_typecheck( struct decl *d ){
             printf(" with elements of type void or function\n");
             typechecker_result = 0;
         }
+        /*
         if (d->symbol->kind == SYMBOL_LOCAL){
             printf("type error: declared local variable %s with type ", d->name);
             type_print(d->symbol->type);
             printf(", cannot declare local variables with array typeeeee\n");
             typechecker_result = 0;
         }
-        else if (d->symbol->kind == SYMBOL_GLOBAL){
+        */
+        if (d->symbol->kind == SYMBOL_GLOBAL){
             check_arr_global_size(d->symbol->type);
         }
         if (d->value){
@@ -339,7 +342,7 @@ struct type* expr_typecheck( struct expr *e ){
                 error_print(e->left,e->right, "^");
                 typechecker_result = 0;
             }
-            return type_create(TYPE_FLOAT, NULL, NULL, NULL);;
+            return type_create(left->kind, NULL, NULL, NULL);;
             break;
         case EXPR_ASSIGN:
             left = expr_typecheck(e->left);
@@ -522,6 +525,13 @@ struct type* expr_typecheck( struct expr *e ){
             expr_typecheck(e->left);
             expr_typecheck(e->right);
             break;
+
+        case EXPR_PARAM_LIST:
+            expr_typecheck(e->left);
+            expr_typecheck(e->right);
+
+            break;
+
         
     }
     //should happend for print statements
@@ -698,4 +708,9 @@ void check_arr_global_size( struct type *type ){
     type_print(t);
     check_arr_global_size( type->subtype );
     
+}
+
+int param_list_length( struct param_list *p ){
+    if (!p) return 0;
+    else return param_list_length( p->next ) + 1;
 }

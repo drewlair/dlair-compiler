@@ -244,7 +244,7 @@ expression          : expression TOKEN_ASSIGN e1 { $$ = expr_create( EXPR_ASSIGN
                     ;
 
 e2                  : e2 TOKEN_OR e1 { $$ = expr_create( EXPR_OR, $1, $3); }
-                    | e2 TOKEN_AND e1 { $$ = expr_create( EXPR_OR, $1, $3); }
+                    | e2 TOKEN_AND e1 { $$ = expr_create( EXPR_AND, $1, $3); }
                     | e1 { $$ = $1; }
                     ;
 
@@ -282,7 +282,7 @@ incr                : value TOKEN_INCREMENT { $$ = expr_create( EXPR_INCR, $1, N
 value               : int_val {  $$ = expr_create_integer_literal($1); }
                     | float_val { $$ = expr_create_float_literal($1); }
                     | func_expr { $$ = $1; }
-                    | char_val { $$ = expr_create_char_literal($1[1]); }
+                    | char_val { $$ = expr_create_char_literal($1); }
                     | str_val { $$ = expr_create_string_literal($1); }
                     | bool_val { $$ = expr_create_boolean_literal($1);}
                     | TOKEN_OPEN_PAR expression TOKEN_CLOSED_PAR { $$ = expr_create( EXPR_PAREN, $2, NULL); }
@@ -298,7 +298,7 @@ float_val           : TOKEN_FLOAT_LITERAL   { $$ = atof(yytext); }
 bool_val            : TOKEN_BOOLEAN_LITERAL { $$ = yytext; }
                     ;
 
-char_val            : TOKEN_CHAR_LITERAL    { $$ = yytext; }
+char_val            : TOKEN_CHAR_LITERAL    { $$ = strdup(yytext); }
                     ;
 
 str_val             : TOKEN_STRING_LITERAL  { $$ = strdup(yytext); }
@@ -316,8 +316,8 @@ expr_param_list_init: expr_param_list { $$ = $1;}
                     | { $$ = NULL;}
                     ;
 
-expr_param_list     : expression TOKEN_COMMA expr_param_list { $$ = expr_create( EXPR_LIST, $1, $3);}
-                    | expression { $$ = expr_create(EXPR_LIST, $1, NULL); }
+expr_param_list     : expression TOKEN_COMMA expr_param_list { $$ = expr_create( EXPR_PARAM_LIST, $1, $3);}
+                    | expression { $$ = expr_create(EXPR_PARAM_LIST, $1, NULL); }
                     ;
 
 

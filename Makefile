@@ -43,7 +43,7 @@ parser.c parser.h token_bison.h: src/parser.bison
 scanner.c: src/scanner.flex token_bison.h parser.h
 	flex -oscanner.c src/scanner.flex
 
-main.o: src/main.c include/typecheck.h include/encoder.h parser.h
+main.o: src/main.c include/codegen.h include/typecheck.h include/resolve.h include/hash_table.h include/encoder.h parser.h
 	$(CMP) $(FLAGS) src/main.c -c -o main.o
 
 scanner.o: scanner.c include/token.h
@@ -55,11 +55,20 @@ parser.o: parser.c parser.h include/type.h
 encoder.o: src/encoder.c include/encoder.h
 	$(CMP) $(FLAGS) src/encoder.c -c -o encoder.o
 
-$(EXEC): $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o scope.o ht.o resolve.o symbol.o typecheck.o
-	$(CMP) $(FLAGS) $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o scope.o ht.o resolve.o symbol.o typecheck.o -o exec/$(EXEC) -lm
+scratch.o: src/scratch.c include/scratch.h 
+	$(CMP) $(FLAGS) src/scratch.c -c -o scratch.o
 
-test: bin/runtypechecks.sh
-	./bin/runtypechecks.sh
+label.o: src/label.c include/label.h 
+	$(CMP) $(FLAGS) src/label.c -c -o label.o
+
+codegen.o: src/codegen.c include/codegen.h 
+	$(CMP) $(FLAGS) src/codegen.c -c -o codegen.o
+
+$(EXEC): $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o scope.o ht.o resolve.o symbol.o typecheck.o label.o scratch.o codegen.o
+	$(CMP) $(FLAGS) $(MAIN).o $(FUNC).o scanner.o parser.o expr.o type.o param_list.o decl.o stmt.o scope.o ht.o resolve.o symbol.o typecheck.o label.o scratch.o codegen.o -o exec/$(EXEC) -lm
+
+test: bin/runcodegen.sh
+	./bin/runcodegen.sh
 
 scan: bin/runscans.sh
 	./bin/runscans.sh
@@ -74,7 +83,10 @@ resolve: bin/runresolve.sh
 	./bin/runresolve.sh
 
 typecheck: bin/runtypecheck.sh 
-	./bin/typecheck.sh 
+	./bin/runtypecheck.sh
+
+codegen: bin/runcodegen.sh
+	./bin/runcodegen.sh
 
 
 clean:
@@ -85,6 +97,8 @@ clean:
 	rm parser.c
 	rm parser.output
 	rm exec/$(EXEC)
+	rm test/codegen/*.bminor.out
+	rm test/codegen/*.bminor.s
 	rm test/typechecker/*.bminor.out
 	rm test/resolver/*.bminor.out
 	rm test/printer/*.bminor.out

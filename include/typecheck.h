@@ -24,5 +24,6 @@ void returnTypesDestructor( struct returnTypes *r );
 int check_array_type(struct type *type);
 void param_list_type_check(struct param_list *params);
 void check_arr_global_size(struct type *type);
+int param_list_length( struct param_list *p );
 
 int typechecker_result;

@@ -64,13 +64,54 @@ extern struct expr* expr_create_float_literal( float f ){
 
 }
 
-extern struct expr* expr_create_char_literal( const char c ){
+extern struct expr* expr_create_char_literal( const char *c ){
     struct expr *e = malloc(sizeof(struct expr));
 
     e->left = NULL;
     e->right = NULL;
     e->kind = EXPR_CHAR_LITERAL;
-    e->char_literal = c;
+    if (c[1] == '\\'){
+        if (c[2] == '\\'){
+            e->literal_value = 92; //ascii's for all special chars
+        }
+        else if (c[2] == 'n'){
+            e->literal_value = 10;
+        }
+        else if (c[2] == ' '){
+            e->literal_value = 32;
+        }
+        else if (c[2] == 't'){
+            e->literal_value = 9;
+        }
+        else if (c[2] == 'a'){
+            e->literal_value = 7;
+        }
+        else if (c[2] == 'b'){
+            e->literal_value = 8;
+        }
+        else if (c[2] == 'e'){
+            e->literal_value = 27;
+        }
+        else if (c[2] == 'f'){
+            e->literal_value = 12;
+        }
+        else if (c[2] == 'r'){
+            e->literal_value = 13;
+        }
+        else if (c[2] == 'v'){
+            e->literal_value = 11;
+        }
+        else if (c[2] == '\''){
+            e->literal_value = 39;
+        }
+        else if (c[2] == '\"'){
+            e->literal_value = 34;
+        }
+        
+    }
+    else{
+        e->literal_value = (int)c[1];
+    }
 
 
 
@@ -85,7 +126,6 @@ extern struct expr* expr_create_string_literal( const char *str ){
     e->left = NULL;
     e->right = NULL;
     e->kind = EXPR_STRING_LITERAL;
-
     e->string_literal = str;
 
 
@@ -230,7 +270,7 @@ extern void expr_print( struct expr* e ){
             printf("%g",e->float_literal);
             break;
         case EXPR_CHAR_LITERAL:
-            printf("\'%c\'",e->char_literal);
+            printf("\'%c\'",e->literal_value);
             break;
         case EXPR_STRING_LITERAL:
             printf("%s",e->string_literal);
@@ -254,6 +294,12 @@ extern void expr_print( struct expr* e ){
             expr_print(e->left);
             printf(")");
             break;
+        case EXPR_PARAM_LIST:
+            expr_print(e->left);
+            if (e->right){
+                printf(", ");
+                expr_print(e->left);
+            }
 
         default:
             printf("bad expr kind %d\n",e->kind);

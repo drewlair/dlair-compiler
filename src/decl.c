@@ -8,6 +8,7 @@ struct decl* decl_create(const char* name, struct type* type, struct expr* value
     d->value = value;
     d->code = code;
     d->next = next;
+    
     return d;
 }
 

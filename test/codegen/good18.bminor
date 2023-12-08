@@ -1,0 +1,6 @@
+usleep: function integer ();
+
+main: function integer () = {
+	print usleep();
+	return 10;
+}

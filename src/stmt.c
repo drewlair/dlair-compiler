@@ -15,6 +15,7 @@ extern struct stmt* stmt_create(stmt_t kind, struct decl *decl, struct expr *ini
         s->else_body = else_body;
         s->next = next;
         s->is_braced = false;
+        s->numLocals = 0;
 
         return s;
 
