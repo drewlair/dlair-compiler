@@ -1,0 +1,24 @@
+c1: integer = -1;
+c3: integer = 100;
+
+d1: integer = 1;
+d2: integer = 2;
+
+C: function integer(c1: integer, c2: integer) = {
+	c3: integer = 11;
+	c4: integer = 12;
+	c5: integer = 13;
+	return c1 + c2 + c3 + c4;
+}
+
+D: function integer(d1: integer, d2: integer) = {
+	d3: integer = -3;
+	d4: integer = 4;
+	d5: integer = 5;
+	return d1 + d2 + d3 - d4;
+}
+
+main: function integer() = {
+	f: integer = D(6, 7);
+	return C(1, 2) - 16;
+}

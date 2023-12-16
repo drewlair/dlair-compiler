@@ -2,6 +2,8 @@
 /* Try decls and stmts and exprs together. */
 /* Add some float */
 
+rand: function integer ();
+
 simplefunc: function boolean ( x: integer, y: integer ) = {
 
      // A declaration
@@ -14,6 +16,7 @@ simplefunc: function boolean ( x: integer, y: integer ) = {
      v: float = 2.10e2;
 
      // a float operation
+     rand();
      return v;
 
 }

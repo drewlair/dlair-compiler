@@ -17,13 +17,10 @@ void decl_resolve( struct decl* d ){
 
     else{
         s = symbol_create( SYMBOL_LOCAL, d->type, d->name );
-        stack->localCount++;
-        s->which = stack->localCount;
+        s->which = ++localCount;
     }
     d->symbol = s;
     scope_bind( d->name, d->symbol );
-    
-    s = scope_lookup(d->name);
     
     
 
@@ -36,10 +33,11 @@ void decl_resolve( struct decl* d ){
         
         param_list_resolve( d->type->params, 1 );
         stmt_resolve( d->code );
-        if (d->code) d->code->numLocals = stack->localCount;
+        //if (d->code) d->code->numLocals = stack->localCount;
         
         scope_exit();
-            
+        d->symbol->which = localCount;
+        localCount = 0;    
     }
     else{
         expr_resolve( d->value );
@@ -75,28 +73,31 @@ void stmt_resolve( struct stmt* s ){
         expr_resolve( s->expr       );
         expr_resolve( s->next_expr  );
         stmt_resolve( s->body       );
-        s->numLocals = stack->localCount;
         scope_exit();
     }
 
     else if ( s->kind == STMT_IF_ELSE ){
         expr_resolve( s->init_expr );
 
-        scope_enter();
+        
         stmt_resolve( s->body );
-        s->body->numLocals = stack->localCount;
-        scope_exit();
 
-        scope_enter();
         stmt_resolve( s->else_body );
-        if (s->else_body) s->else_body->numLocals = stack->localCount;
-        scope_exit();
     }
 
-    else{
+    else if(s->kind == STMT_EXPR){
         
         expr_resolve( s->init_expr );
     }
+    else if (s->kind == STMT_SCOPE){
+        scope_enter();
+        stmt_resolve(s->body);
+        scope_exit();
+    }
+    else { //print or return
+        expr_resolve(s->init_expr);
+    }
+    
     
     stmt_resolve( s->next );
 
@@ -107,9 +108,9 @@ void expr_resolve( struct expr* e ){
     if ( !e ){
         return;
     }
-    if ( e->kind == EXPR_IDENT_LITERAL ){
-        
+    if ( e->kind == EXPR_IDENT_LITERAL){
         struct symbol *s = scope_lookup( e->name );
+        
         /*
         if ( !s ){
             printf("resolve error: %s is not defined\n", e->name);

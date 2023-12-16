@@ -9,8 +9,8 @@ struct stack_node{
     struct hash_table* ht;
     struct stack_node* prev;
     int size;
-    int localCount;
 };
+int localCount;
 
 struct stack_node* stack;
 int resolver_result;

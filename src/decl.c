@@ -20,13 +20,12 @@ void decl_print( struct decl *d, int indent ){
     for (int i = 0; i < indent; i++){
         printf("\t");
     }
-
+    printf("%s: ", d->name);
     type_print( d->type );
     if( d->code ){
-        printf(" = \n{\n");
-        stmt_print(d->code, indent+1);
-        printf("}\n");
-
+        printf(" =\n");
+        stmt_print(d->code, indent);
+        printf("\n");
     }
     else if (d->value){
         printf(" = ");

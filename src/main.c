@@ -22,6 +22,7 @@ int main(int argc, char* argv[]){
     //initialize scope stack and return global
     stack = NULL;
     scope_enter();
+    localCount = 0;
     returnTypesHead = NULL;
     returnTypesTail = NULL;
     typechecker_result = 1;
@@ -87,7 +88,7 @@ int main(int argc, char* argv[]){
 
         while ( true ){
             int t = yylex();
-            if ( t == TOKEN_EOF ){ printf("scn: %s\n",yytext); break;}
+            if ( t == TOKEN_EOF ){ break;}
 
             printf("token: %d  text: <%s>\n", t, yytext);
             if( t == TOKEN_ERROR ){

@@ -17,7 +17,10 @@ struct type* decl_typecheck( struct decl *d ){
         }
         
         param_list_type_check(d->symbol->type->params);
-
+        if (d->code && d->code->kind != STMT_SCOPE){
+            printf("type error: function body does not enter scope!\n");
+            typechecker_result = 0;
+        }
         stmt_typecheck(d->code);
         struct returnTypes *curr = returnTypesHead;
         while (curr){
@@ -151,6 +154,9 @@ struct type* stmt_typecheck( struct stmt *s ){
             expr_typecheck(s->init_expr);
             expr_typecheck(s->expr);
             expr_typecheck(s->next_expr);
+            stmt_typecheck(s->body);
+            break;
+        case STMT_SCOPE:
             stmt_typecheck(s->body);
             break;
     }

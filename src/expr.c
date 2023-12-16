@@ -300,9 +300,17 @@ extern void expr_print( struct expr* e ){
                 printf(", ");
                 expr_print(e->left);
             }
-
+            break;
+        case EXPR_PRINT_LIST:
+            expr_print(e->left);
+            if (e->right){
+                printf(", ");
+                expr_print(e->right);
+            }
+            break;
         default:
             printf("bad expr kind %d\n",e->kind);
+            
             return;
     }
 

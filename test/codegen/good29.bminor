@@ -1,10 +1,9 @@
-/*
-Incorrect: Several type errors throughout.
-*/
+abs: function integer(n: integer) = {
+	if (n < 0) return -1*n;
+    else return n;
+}
 
-abs: function string (n: integer);
-
-digits: array [6] char = {
+digits: array [6] integer = {
 	14,
 	8,
 	6168,
@@ -15,14 +14,13 @@ digits: array [6] char = {
 
 main:function integer () = {
 	digits[4] = -468;
-	i: boolean = 0;
-	/*
+	i: integer = 0;
 	for (; abs(digits[i]) == digits[i];) {
 		print digits[i];
 		i = i + 1;
 		print ' ';
-	}*/
+	}
 	print '\n';
-        z: float = 1.0 + 2;
-	return 0;
+
+	return 10;
 }

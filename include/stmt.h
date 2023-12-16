@@ -13,6 +13,7 @@ typedef enum {
 	STMT_FOR,
 	STMT_PRINT,
 	STMT_RETURN,
+	STMT_SCOPE,
 	
 } stmt_t;
 

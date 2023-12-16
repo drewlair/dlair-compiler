@@ -12,6 +12,7 @@ do
         if [ "$?" != "10" ]
         then
             echo "$testfile has different return value than expected"
+            echo "returned $?"
         else
             if diff $testfile.out $testfile.expected
             then

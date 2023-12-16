@@ -3,7 +3,7 @@ foo: function void (i: integer, f: float, c: char, s: string, a: array [] boolea
     if (i < 50){
         print "int works";
     }
-    else if(i < 70^2){
+    else if(i^1 < 70^2){
         print "float works";
     }
     ch: char = c;

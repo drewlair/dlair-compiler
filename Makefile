@@ -82,8 +82,8 @@ print: bin/runprints.sh
 resolve: bin/runresolve.sh 
 	./bin/runresolve.sh
 
-typecheck: bin/runtypecheck.sh 
-	./bin/runtypecheck.sh
+typecheck: bin/runtypechecks.sh 
+	./bin/runtypechecks.sh
 
 codegen: bin/runcodegen.sh
 	./bin/runcodegen.sh

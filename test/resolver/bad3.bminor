@@ -1,7 +1,10 @@
 // can't use anything but print in this form
 foo1: function void () = {
+    x: integer = 5;
+    print x;
     return;
 }
 foo1: function void () = {
+    print x;
     return;
 }

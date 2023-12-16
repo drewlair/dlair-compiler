@@ -1,0 +1,8 @@
+fxn1: function void (x: integer) = {
+    print "first func";
+
+}
+
+fxn2: function integer (y: integer) = {
+    return y + x;
+}

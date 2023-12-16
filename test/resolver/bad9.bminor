@@ -1,5 +1,10 @@
 //checking param lists with trailing ,
-main:function void(hello:string, )=
+main:function void(hello:string)=
 {
 	print hello;
+	{
+		j: integer = 10;
+		j: boolean = false;
+	}
+
 }

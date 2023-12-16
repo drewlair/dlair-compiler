@@ -12,12 +12,10 @@ void scope_enter(){
         stack = newStack;
         stack->prev = NULL;
         stack->size = 1;
-        stack->localCount = 0;
     }
     else{
         newStack->prev = stack;
         newStack->size = stack->size + 1;
-        newStack->localCount = 0;
         stack = newStack;
     }
     

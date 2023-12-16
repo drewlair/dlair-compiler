@@ -1,6 +1,7 @@
 #include "../include/codegen.h"
 
 int codegen_result = 0;
+char *currFunctionEpilogue = NULL;
 
 struct num_params{
     int num;
@@ -48,7 +49,7 @@ int decl_codegen( struct decl* d ){
                 numParams = new;
             }
 
-            if (d->code) printf("\tsubq $%d, %%rsp\n", d->code->numLocals*8);
+            printf("\tsubq $%d, %%rsp\n", d->symbol->which*8);
 
             
             printf("\tpushq %%rbx\n");
@@ -56,10 +57,16 @@ int decl_codegen( struct decl* d ){
             printf("\tpushq %%r13\n");
             printf("\tpushq %%r14\n");
             printf("\tpushq %%r15\n");
+            if (currFunctionEpilogue) free(currFunctionEpilogue);
+            
+            currFunctionEpilogue = label_name_create(label_create(), d->name);
+
             if (d->code) stmt_codegen(d->code);
             else printf("\tcall %s\n", d->name);
-            printf("%s_epilogue:\n", d->name);
-            if (d->code) printf("\taddq $%d, %%rsp\n", d->code->numLocals*8);
+            
+            
+            printf("%s:\n", currFunctionEpilogue);
+            if (d->code) printf("\taddq $%d, %%rsp\n", d->symbol->which*8);
             printf("\tpopq %%r15\n");
             printf("\tpopq %%r14\n");
             printf("\tpopq %%r13\n");
@@ -181,7 +188,10 @@ void stmt_codegen( struct stmt *s ){
             expr_codegen(s->init_expr);
             printf("\tmovq %s, %%rax\n", scratch_name(s->init_expr->reg));
             scratch_free(s->init_expr->reg);
-            printf("\tjmp %s_epilogue\n", numParams->func_name);
+            //printf("\tmovq %%r12, %%rdi\npushq %%r10\n pushq %%r11\n call print_integer\n popq %%r11\n popq %%r10\n");
+            
+            printf("\tjmp %s\n", currFunctionEpilogue);
+            
             break;
 
         case STMT_PRINT:
@@ -193,26 +203,26 @@ void stmt_codegen( struct stmt *s ){
             break;
 
         case STMT_FOR:
-            printf("\tsubq $%d, %%rsp\n", s->numLocals*8);
+            //printf("\tsubq $%d, %%rsp\n", s->numLocals*8);
             expr_codegen(s->init_expr);
             if (s->init_expr) scratch_free(s->init_expr->reg);
             t = label_create();
             b = label_create();
-            printf(".%s:\n", label_name_create(t, 'f'));
+            printf(".%s:\n", label_name_create(t, "L"));
             expr_codegen(s->expr);
             if (s->expr){ 
                 printf("\tcmp $0, %s\n", scratch_name(s->expr->reg));
                 scratch_free(s->expr->reg);
             }
             
-            printf("\tje .%s\n", label_name_create(b, 'f'));
+            printf("\tje .%s\n", label_name_create(b, "L"));
             stmt_codegen(s->body);
             expr_codegen(s->next_expr);
 
             if (s->next_expr) scratch_free(s->next_expr->reg);
 
-            printf("\tjmp .%s\n", label_name_create(t, 'f'));
-            printf(".%s:\n", label_name_create(b, 'f'));
+            printf("\tjmp .%s\n", label_name_create(t, "L"));
+            printf(".%s:\n", label_name_create(b, "L"));
             printf("\taddq $%d, %%rsp\n", s->numLocals*8);
             break;
 
@@ -224,19 +234,22 @@ void stmt_codegen( struct stmt *s ){
             b = label_create();
             printf("\tcmp $0, %s\n",scratch_name(s->init_expr->reg));
             scratch_free(s->init_expr->reg);
-            printf("\tje .%s\n", label_name_create(t, 'f'));
-            printf("\tsubq $%d, %%rsp\n", s->body->numLocals*8);
+            printf("\tje .%s\n", label_name_create(t, "L"));
+            //printf("\tsubq $%d, %%rsp\n", s->body->numLocals*8);
             stmt_codegen(s->body);
             printf("\taddq $%d, %%rsp\n", s->body->numLocals*8);
-            printf("\tjmp .%s\n", label_name_create(b, 'f'));
-            printf(".%s:\n", label_name_create(t, 'f'));
+            printf("\tjmp .%s\n", label_name_create(b, "L"));
+            printf(".%s:\n", label_name_create(t, "L"));
             if (s->else_body){
-                printf("\tsubq $%d, %%rsp\n", s->else_body->numLocals*8);
+                //printf("\tsubq $%d, %%rsp\n", s->else_body->numLocals*8);
                 stmt_codegen(s->else_body);
-                printf("\taddq $%d, %%rsp\n", s->else_body->numLocals*8);
+                //printf("\taddq $%d, %%rsp\n", s->else_body->numLocals*8);
             }
-            printf(".%s:\n", label_name_create(b, 'f'));
+            printf(".%s:\n", label_name_create(b, "L"));
             
+            break;
+        case STMT_SCOPE:
+            stmt_codegen(s->body);
             break;
 
 
@@ -310,9 +323,9 @@ void expr_codegen( struct expr *e ){
             e->reg = scratch_alloc();
             label = label_create();
             printf(".data\n");
-            printf(".%s: .string %s\n", label_name_create(label, 's'), e->string_literal);
+            printf(".%s: .string %s\n", label_name_create(label, "S"), e->string_literal);
             printf(".text\n");
-            printf("\tleaq .%s, %s\n", label_name_create(label, 's'), scratch_name(e->reg));
+            printf("\tleaq .%s, %s\n", label_name_create(label, "S"), scratch_name(e->reg));
             break;
 
         case EXPR_BOOLEAN_LITERAL:
@@ -641,13 +654,27 @@ void expr_codegen( struct expr *e ){
             break;
 
         case EXPR_ASSIGN:
-            expr_codegen(e->right);
-            expr_codegen(e->left);
             t = expr_typecheck(e->left);
             if (t->kind == TYPE_FLOAT){
+                expr_codegen(e->left);
+                expr_codegen(e->right);
                 printf("\tmovsd %s, %s\n", float_name(e->right->reg), symbol_codegen(e->left->symbol));
                 float_free(e->right->reg);
+            }else if(e->left->kind == EXPR_INDEX){
+                //printf("\tmovq %s, (%s)\n", scratch_name(e->right->reg), scratch_name(e->left->reg));
+                e->reg = scratch_alloc();
+                printf("\tleaq %s, %s\n", e->left->left->symbol->name, scratch_name(e->reg));
+                expr_codegen(e->left->right);
+                expr_codegen(e->right);
+                printf("\tmovq %s, (%s, %s, 8)\n", scratch_name(e->right->reg), scratch_name(e->reg), scratch_name(e->left->right->reg));
+                scratch_free(e->left->right->reg);
+                scratch_free(e->reg);
+                e->reg = e->right->reg;
+
+
             }else{
+                expr_codegen(e->left);
+                expr_codegen(e->right);
                 printf("\tmovq %s, %s\n", scratch_name(e->right->reg), symbol_codegen(e->left->symbol));
                 scratch_free(e->right->reg);
             }

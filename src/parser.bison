@@ -77,7 +77,7 @@ for use by scanner.c.
 
 };
 
-%type <expr> expression expr value unary incr n1 e1 e2 expr_list func_expr end_declaration func_call arr_call index print_list print_list_init expr_param_list expr_param_list_init;
+%type <expr> expression expr value unary incr n1 n2 e1 e2 exp_mod expr_list func_expr end_declaration func_call arr_call index print_list print_list_init expr_param_list expr_param_list_init;
 %type <stmt> o_statement_list statement_list statement end_func_decl open_stmt closed_stmt non_if return_expr print_expr non_return non_stmt_list;
 %type <decl> f_decl_list f_declaration;
 %type <param_list> decl_list decl_list_init;
@@ -143,7 +143,7 @@ f_declaration       : ident_val TOKEN_COLON TOKEN_FUNCTION types TOKEN_OPEN_PAR 
                     | ident_val TOKEN_COLON types end_declaration { $$ = decl_create( $1, $3, $4, NULL, NULL );}
                     ;
 
-end_func_decl       : TOKEN_ASSIGN TOKEN_OPEN_BRACK statement_list TOKEN_CLOSED_BRACK { $3->is_braced = true; $$ = $3;}
+end_func_decl       : TOKEN_ASSIGN TOKEN_OPEN_BRACK statement_list TOKEN_CLOSED_BRACK { $$ = stmt_create( STMT_SCOPE, NULL, NULL, NULL, NULL, $3, NULL, NULL); }
                     | TOKEN_SEMICOLON { $$ = NULL; }
                     ;
 
@@ -182,7 +182,7 @@ statement           : open_stmt { $$ = $1; }
 
 
 
-non_if              : TOKEN_OPEN_BRACK statement_list TOKEN_CLOSED_BRACK { $2->is_braced = true; $$ = $2; }
+non_if              : TOKEN_OPEN_BRACK statement_list TOKEN_CLOSED_BRACK { $$ = stmt_create( STMT_SCOPE, NULL, NULL, NULL, NULL, $2, NULL, NULL); /*$2->is_braced = true; $$ = $2;*/ }
                     | non_stmt_list { $$ = $1; }
                     ;
 
@@ -239,7 +239,7 @@ expr                : expression { $$ = $1; }
                     ;
 
 
-expression          : expression TOKEN_ASSIGN e1 { $$ = expr_create( EXPR_ASSIGN, $1, $3 ); }
+expression          : expression TOKEN_ASSIGN e2 { $$ = expr_create( EXPR_ASSIGN, $1, $3 ); }
                     | e2 { $$ = $1; }
                     ;
 
@@ -250,22 +250,28 @@ e2                  : e2 TOKEN_OR e1 { $$ = expr_create( EXPR_OR, $1, $3); }
 
 
 
-e1                  : e1 TOKEN_ADD n1 { $$ = expr_create( EXPR_ADD, $1, $3 ); }
-                    | e1 TOKEN_SUB n1 { $$ = expr_create( EXPR_SUB, $1, $3 ); }
-                    | e1 TOKEN_EE n1 { $$ = expr_create( EXPR_EE, $1, $3 ); }
-                    | e1 TOKEN_NE n1 { $$ = expr_create( EXPR_NE, $1, $3 ); }
-                    | e1 TOKEN_GE n1 { $$ = expr_create( EXPR_GE, $1, $3 ); }
-                    | e1 TOKEN_LE n1 { $$ = expr_create( EXPR_LE, $1, $3 ); }
-                    | e1 TOKEN_GT n1 { $$ = expr_create( EXPR_GT, $1, $3 ); }
-                    | e1 TOKEN_LT n1 { $$ = expr_create( EXPR_LT, $1, $3 ); }
-                    | n1             { $$ = $1; }
+e1                  : e1 TOKEN_EE n2 { $$ = expr_create( EXPR_EE, $1, $3 ); }
+                    | e1 TOKEN_NE n2 { $$ = expr_create( EXPR_NE, $1, $3 ); }
+                    | e1 TOKEN_GE n2 { $$ = expr_create( EXPR_GE, $1, $3 ); }
+                    | e1 TOKEN_LE n2 { $$ = expr_create( EXPR_LE, $1, $3 ); }
+                    | e1 TOKEN_GT n2 { $$ = expr_create( EXPR_GT, $1, $3 ); }
+                    | e1 TOKEN_LT n2 { $$ = expr_create( EXPR_LT, $1, $3 ); }
+                    | n2             { $$ = $1; }
                     ;
 
-n1                  : n1 TOKEN_MULT unary {  $$ = expr_create( EXPR_MUL, $1, $3 ); }
-                    | n1 TOKEN_DIV  unary {  $$ = expr_create( EXPR_DIV, $1, $3 ); }
-                    | n1 TOKEN_EXP  unary {  $$ = expr_create( EXPR_EXP, $1, $3 ); }
-                    | n1 TOKEN_MOD  unary {  $$ = expr_create( EXPR_MOD, $1, $3 ); }
-                    | unary               {  $$ = $1; }
+n2                  : n2 TOKEN_ADD n1 { $$ = expr_create( EXPR_ADD, $1, $3 ); }
+                    | n2 TOKEN_SUB n1 { $$ = expr_create( EXPR_SUB, $1, $3 ); }
+                    | n1 { $$ = $1; }
+                    ;
+
+n1                  : n1 TOKEN_MULT exp_mod {  $$ = expr_create( EXPR_MUL, $1, $3 ); }
+                    | n1 TOKEN_DIV  exp_mod {  $$ = expr_create( EXPR_DIV, $1, $3 ); }
+                    | exp_mod               {  $$ = $1; }
+                    ;
+
+exp_mod             : exp_mod TOKEN_EXP unary {  $$ = expr_create( EXPR_EXP, $1, $3 ); }
+                    | exp_mod TOKEN_MOD unary {  $$ = expr_create( EXPR_MOD, $1, $3 ); }
+                    | unary { $$ = $1; }
                     ;
 
 unary               : TOKEN_ADD unary { $$ = expr_create( EXPR_POS, $2, NULL );  }

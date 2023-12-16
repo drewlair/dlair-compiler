@@ -2,5 +2,9 @@
 x:intger = 5;
 main:function void()
 {
-	print x x "hello";
+	{
+		y: integer = 10;
+		x = x + y;
+	}
+	print x, y, "hello";
 }

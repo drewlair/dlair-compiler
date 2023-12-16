@@ -3,5 +3,10 @@ x:integer = 5;
 main:function void()=
 {
 	x++;
-	if(x > 5)
+	if(x > 5){
+		if (z == 10){
+			g: boolean = false;
+		}
+	}
+	z: boolean = g;
 }

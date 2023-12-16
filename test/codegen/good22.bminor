@@ -1,0 +1,6 @@
+x: integer = 1;
+main: function integer () = {
+    x++;
+    print x, "\n";
+    return 10;
+}

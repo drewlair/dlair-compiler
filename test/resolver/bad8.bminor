@@ -1,5 +1,11 @@
 //checking param lists
-main:function void("hello", x:integer) =
+main:function void(k: float, x:integer) =
 {
-	print x;
+	{
+		{
+			z: string = "what";
+		}
+		print z;
+	}
+	return;
 }

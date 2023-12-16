@@ -1,0 +1,18 @@
+foo_epilogue: function integer () = {
+	return 2;
+}
+
+foo: function integer ();
+
+main: function integer () = {
+	return foo() * 10 - 30;
+}
+
+main_epilogue: function integer () = {
+	return foo_epilogue() + 3;
+}
+
+foo: function integer () = {
+	print "here\n";
+	return main_epilogue() - 1;
+}
